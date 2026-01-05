@@ -1,0 +1,39 @@
+<UserControl x:Class="CodingWithCalvin.VsixManifestDesigner.Views.ManifestDesignerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:CodingWithCalvin.VsixManifestDesigner.Views"
+             xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
+             xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
+             Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+
+    <Grid>
+        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
+                    Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
+                    Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+            <TabItem Header="Metadata">
+                <views:MetadataView />
+            </TabItem>
+            <TabItem Header="Install Targets">
+                <views:InstallationView />
+            </TabItem>
+            <TabItem Header="Dependencies">
+                <views:DependenciesView />
+            </TabItem>
+            <TabItem Header="Prerequisites">
+                <views:PrerequisitesView />
+            </TabItem>
+            <TabItem Header="Assets">
+                <views:AssetsView />
+            </TabItem>
+            <TabItem Header="Content">
+                <views:ContentView />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

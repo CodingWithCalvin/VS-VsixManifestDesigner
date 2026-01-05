@@ -1,0 +1,36 @@
+<Project Sdk="CodingWithCalvin.VsixSdk/0.3.0">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>CodingWithCalvin.VsixManifestDesigner</RootNamespace>
+    <AssemblyName>CodingWithCalvin.VsixManifestDesigner</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Assembly Info -->
+  <PropertyGroup>
+    <Company>CodingWithCalvin</Company>
+    <Authors>Calvin A. Allen</Authors>
+    <Product>VSIX Manifest Designer</Product>
+    <Description>A modern WPF-based designer for VSIX manifest files that properly supports SDK-style projects.</Description>
+    <Copyright>Copyright (c) Calvin A. Allen. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <!-- Package References -->
+  <ItemGroup>
+    <PackageReference Include="CodingWithCalvin.Otel4Vsix" Version="*" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" Version="17.*" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.*" />
+  </ItemGroup>
+
+  <!-- Include LICENSE in VSIX -->
+  <ItemGroup>
+    <Content Include="..\..\LICENSE" Link="LICENSE">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+
+</Project>

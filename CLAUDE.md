@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 6. **Working an issue** - Always create a new branch from an updated main branch
 7. **Check branch status before pushing** - Verify the remote tracking branch still exists. If a PR was merged/deleted, create a new branch from main instead
 8. **Microsoft coding guidelines** - Follow [Microsoft C# coding conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) and [.NET library design guidelines](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/)
-9. **WPF for all UI** - All UI must be implemented using WPF (XAML/C#). No web-based technologies (HTML, JavaScript, WebView)
+9. **WPF for all UI** - All UI must be implemented using WPF (XAML/C#). No web-based technologies (HTML, JavaScript, WebView). Must use VS theme colors (`VsBrushes`, `VsColors`) to properly support Light/Dark/Blue themes
 10. **Write tests** - All new/refactored code requires tests where applicable
 11. **Run validation before commits** - Run `dotnet build` and verify no errors before committing
 12. **No co-authors** - Do not add co-author information on commits or pull requests
@@ -68,13 +68,12 @@ gh issue close <number>
 - Prerequisites: List Community edition only (captures Pro/Enterprise)
 
 **CI/CD:**
-- Build workflow: Automated build on push/PR
-- Publish workflow: Automated marketplace publishing
-- Marketplace config: `publish.manifest.json` for automated publishing
+- Build workflow: Automated build on push/PR (uses reusable workflow)
+- Publish workflow: Automated marketplace publishing (uses reusable workflow)
+- Marketplace config: `resources/extension.manifest.json` for automated publishing
 
 **Development Environment:**
 - Required extension: Extensibility Essentials 2022
-- Helper library: Community.VisualStudio.Toolkit (where applicable)
 
 **Documentation:**
 - README should be exciting and use emojis
@@ -97,13 +96,44 @@ dotnet build src/CodingWithCalvin.VsixManifestDesigner/CodingWithCalvin.VsixMani
 
 ## Architecture
 
-*To be documented as the project develops.*
+```
+src/CodingWithCalvin.VsixManifestDesigner/
+├── Editor/                    # VS editor integration
+│   ├── VsixManifestEditorFactory.cs
+│   └── VsixManifestEditorPane.cs
+├── Models/                    # Data models
+│   ├── Asset.cs
+│   ├── Content.cs
+│   ├── Dependency.cs
+│   ├── InstallationTarget.cs
+│   ├── Prerequisite.cs
+│   ├── ProjectInfo.cs
+│   └── VsixManifest.cs
+├── ViewModels/                # MVVM ViewModels
+│   ├── ManifestViewModel.cs
+│   └── ViewModelBase.cs
+├── Views/                     # WPF Views (UserControls)
+│   ├── ManifestDesignerControl.xaml   # Main tabbed container
+│   ├── MetadataView.xaml
+│   ├── InstallationView.xaml
+│   ├── DependenciesView.xaml
+│   ├── PrerequisitesView.xaml
+│   ├── AssetsView.xaml
+│   └── ContentView.xaml
+├── Dialogs/                   # WPF Dialogs
+│   ├── AddAssetDialog.xaml
+│   ├── AddContentDialog.xaml
+│   ├── AddDependencyDialog.xaml
+│   └── ProjectPickerDialog.xaml
+└── Services/                  # Business logic
+    ├── ManifestService.cs
+    └── SolutionService.cs
+```
 
 ## Technology Stack
 
 - C# / .NET Framework 4.8
 - Visual Studio SDK (v17.0+)
-- Community.VisualStudio.Toolkit.17
 - WPF for UI
 - VSIX v3 package format
 

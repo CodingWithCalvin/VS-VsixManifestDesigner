@@ -1,45 +1,19 @@
-name: Publish
+name: Publish to VS Marketplace
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   publish:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Version VSIX
-        uses: CodingWithCalvin/GHA-VSVsixVersioner@main
-        with:
-          extension-manifest-file: src/CodingWithCalvin.VsixManifestDesigner/source.extension.vsixmanifest
-          extension-source-file: src/CodingWithCalvin.VsixManifestDesigner/source.extension.cs
-
-      - name: Restore dependencies
-        run: dotnet restore src/CodingWithCalvin.VsixManifestDesigner/CodingWithCalvin.VsixManifestDesigner.csproj
-
-      - name: Build
-        run: dotnet build src/CodingWithCalvin.VsixManifestDesigner/CodingWithCalvin.VsixManifestDesigner.csproj --configuration Release --no-restore
-
-      - name: Publish to Marketplace
-        uses: CodingWithCalvin/GHA-VSMarketplacePublisher@main
-        with:
-          marketplace-pat: ${{ secrets.VS_MARKETPLACE_PAT }}
-          publish-manifest-path: src/CodingWithCalvin.VsixManifestDesigner/publish.manifest.json
-          vsix-path: src/CodingWithCalvin.VsixManifestDesigner/bin/Release/CodingWithCalvin.VsixManifestDesigner.vsix
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ github.run_number }}
-          files: src/CodingWithCalvin.VsixManifestDesigner/bin/Release/*.vsix
-          generate_release_notes: true
+    uses: CodingWithCalvin/.github/.github/workflows/vsix-publish.yml@main
+    with:
+      extension-name: VsixManifestDesigner
+      display-name: 'VSIX Manifest Designer'
+      marketplace-id: CodingWithCalvin.VS-VsixManifestDesigner
+      description: 'Visual Studio extension providing a visual designer for VSIX manifest files'
+      hashtags: ''
+    secrets: inherit
