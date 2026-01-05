@@ -28,10 +28,12 @@ public partial class AssetsView : UserControl
 
     private void AddAsset_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
             var dialog = new AddAssetDialog(GetServiceProvider(), vm.ManifestFilePath);
-            if (dialog.ShowDialog() == true)
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 vm.Assets.Add(dialog.Asset);
             }
@@ -40,13 +42,15 @@ public partial class AssetsView : UserControl
 
     private void EditAsset_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
             var dataGrid = FindName("AssetsGrid") as DataGrid;
             if (dataGrid?.SelectedItem is Asset selectedAsset)
             {
                 var dialog = new AddAssetDialog(GetServiceProvider(), selectedAsset, vm.ManifestFilePath);
-                if (dialog.ShowDialog() == true)
+                if (DialogHelper.ShowDialogWithOwner(dialog) == true)
                 {
                     var index = vm.Assets.IndexOf(selectedAsset);
                     if (index >= 0)

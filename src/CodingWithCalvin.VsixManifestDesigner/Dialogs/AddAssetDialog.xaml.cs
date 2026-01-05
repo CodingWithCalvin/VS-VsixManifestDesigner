@@ -122,8 +122,10 @@ public partial class AddAssetDialog : DialogWindow
 
     private void BrowseProject_Click(object sender, RoutedEventArgs e)
     {
+        Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
         var dialog = new ProjectPickerDialog(_serviceProvider, _manifestFilePath);
-        if (dialog.ShowDialog() == true && dialog.SelectedProject != null)
+        if (DialogHelper.ShowDialogWithOwner(dialog) == true && dialog.SelectedProject != null)
         {
             _selectedProject = dialog.SelectedProject;
             ProjectTextBox.Text = _selectedProject.Name;

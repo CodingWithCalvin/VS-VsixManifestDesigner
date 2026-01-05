@@ -28,10 +28,12 @@ public partial class DependenciesView : UserControl
 
     private void AddDependency_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
-            var dialog = new AddDependencyDialog(GetServiceProvider());
-            if (dialog.ShowDialog() == true)
+            var dialog = new AddDependencyDialog(GetServiceProvider(), vm.ManifestFilePath);
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 vm.Dependencies.Add(dialog.Dependency);
             }
@@ -40,12 +42,14 @@ public partial class DependenciesView : UserControl
 
     private void EditDependency_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
             if (DependenciesGrid.SelectedItem is Dependency selectedDependency)
             {
-                var dialog = new AddDependencyDialog(GetServiceProvider(), selectedDependency);
-                if (dialog.ShowDialog() == true)
+                var dialog = new AddDependencyDialog(GetServiceProvider(), selectedDependency, vm.ManifestFilePath);
+                if (DialogHelper.ShowDialogWithOwner(dialog) == true)
                 {
                     var index = vm.Dependencies.IndexOf(selectedDependency);
                     if (index >= 0)

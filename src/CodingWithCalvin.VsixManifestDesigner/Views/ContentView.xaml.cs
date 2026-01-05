@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using CodingWithCalvin.VsixManifestDesigner.Dialogs;
 using CodingWithCalvin.VsixManifestDesigner.Models;
 using CodingWithCalvin.VsixManifestDesigner.ViewModels;
+using Microsoft.VisualStudio.Shell;
 
 namespace CodingWithCalvin.VsixManifestDesigner.Views;
 
@@ -21,10 +22,12 @@ public partial class ContentView : UserControl
 
     private void AddContent_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
             var dialog = new AddContentDialog();
-            if (dialog.ShowDialog() == true)
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 vm.Contents.Add(dialog.ContentItem);
             }
@@ -33,10 +36,12 @@ public partial class ContentView : UserControl
 
     private void EditContent_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm && ContentsGrid.SelectedItem is Content selectedContent)
         {
             var dialog = new AddContentDialog(selectedContent);
-            if (dialog.ShowDialog() == true)
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 var index = vm.Contents.IndexOf(selectedContent);
                 if (index >= 0)
