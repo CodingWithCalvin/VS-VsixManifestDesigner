@@ -5,7 +5,9 @@
         <DisplayName>VSIX Manifest Designer</DisplayName>
         <Description xml:space="preserve">A modern WPF-based designer for VSIX manifest files that properly supports SDK-style projects. Replaces the built-in designer with one that can enumerate both legacy and SDK-style projects.</Description>
         <MoreInfo>https://github.com/CodingWithCalvin/VS-VsixManifestDesigner</MoreInfo>
-        <License>LICENSE</License>
+        <License>resources\LICENSE</License>
+        <Icon>resources\logo.png</Icon>
+        <PreviewImage>resources\logo.png</PreviewImage>
         <Tags>vsix, manifest, designer, sdk, extension</Tags>
     </Metadata>
     <Installation>
