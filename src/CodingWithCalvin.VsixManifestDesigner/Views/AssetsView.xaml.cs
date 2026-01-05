@@ -21,22 +21,16 @@ public partial class AssetsView : UserControl
         InitializeComponent();
     }
 
-    private IServiceProvider? GetServiceProvider()
+    private IServiceProvider GetServiceProvider()
     {
-        return Package.GetGlobalService(typeof(SVsServiceProvider)) as IServiceProvider;
+        return ServiceProvider.GlobalProvider;
     }
 
     private void AddAsset_Click(object sender, RoutedEventArgs e)
     {
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
-            var dialog = new AddAssetDialog(serviceProvider);
+            var dialog = new AddAssetDialog(GetServiceProvider());
             if (dialog.ShowDialog() == true)
             {
                 vm.Assets.Add(dialog.Asset);
@@ -48,16 +42,10 @@ public partial class AssetsView : UserControl
     {
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
             var dataGrid = FindName("AssetsGrid") as DataGrid;
             if (dataGrid?.SelectedItem is Asset selectedAsset)
             {
-                var dialog = new AddAssetDialog(serviceProvider, selectedAsset);
+                var dialog = new AddAssetDialog(GetServiceProvider(), selectedAsset);
                 if (dialog.ShowDialog() == true)
                 {
                     var index = vm.Assets.IndexOf(selectedAsset);

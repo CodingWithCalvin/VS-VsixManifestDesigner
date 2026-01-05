@@ -21,22 +21,16 @@ public partial class DependenciesView : UserControl
         InitializeComponent();
     }
 
-    private IServiceProvider? GetServiceProvider()
+    private IServiceProvider GetServiceProvider()
     {
-        return Package.GetGlobalService(typeof(SVsServiceProvider)) as IServiceProvider;
+        return ServiceProvider.GlobalProvider;
     }
 
     private void AddDependency_Click(object sender, RoutedEventArgs e)
     {
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
-            var dialog = new AddDependencyDialog(serviceProvider);
+            var dialog = new AddDependencyDialog(GetServiceProvider());
             if (dialog.ShowDialog() == true)
             {
                 vm.Dependencies.Add(dialog.Dependency);
@@ -48,15 +42,9 @@ public partial class DependenciesView : UserControl
     {
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
             if (DependenciesGrid.SelectedItem is Dependency selectedDependency)
             {
-                var dialog = new AddDependencyDialog(serviceProvider, selectedDependency);
+                var dialog = new AddDependencyDialog(GetServiceProvider(), selectedDependency);
                 if (dialog.ShowDialog() == true)
                 {
                     var index = vm.Dependencies.IndexOf(selectedDependency);
