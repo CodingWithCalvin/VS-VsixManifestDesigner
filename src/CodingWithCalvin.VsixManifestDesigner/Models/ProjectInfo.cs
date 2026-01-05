@@ -31,6 +31,12 @@ public sealed class ProjectInfo
     public bool IsVsixProject { get; set; }
 
     /// <summary>
+    /// Gets or sets whether the project has the TemplateProjectOutputGroup target.
+    /// This indicates the project can produce template assets.
+    /// </summary>
+    public bool HasTemplateOutputGroup { get; set; }
+
+    /// <summary>
     /// Gets or sets the relative path from the manifest to this project.
     /// </summary>
     public string? RelativePath { get; set; }

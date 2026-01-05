@@ -17,6 +17,7 @@ namespace CodingWithCalvin.VsixManifestDesigner.Dialogs;
 public partial class ProjectPickerDialog : DialogWindow
 {
     private readonly SolutionService _solutionService;
+    private readonly string? _manifestFilePath;
 
     /// <summary>
     /// Gets the selected project.
@@ -32,13 +33,13 @@ public partial class ProjectPickerDialog : DialogWindow
     /// Initializes a new instance of the <see cref="ProjectPickerDialog"/> class.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    public ProjectPickerDialog(IServiceProvider serviceProvider)
+    /// <param name="manifestFilePath">The path to the manifest being edited (to exclude its project).</param>
+    public ProjectPickerDialog(IServiceProvider serviceProvider, string? manifestFilePath = null)
     {
         _solutionService = new SolutionService(serviceProvider);
+        _manifestFilePath = manifestFilePath;
 
         InitializeComponent();
-
-        Resources.Add("BoolToVisibilityConverter", new BooleanToVisibilityConverter());
 
         Loaded += OnLoaded;
     }
@@ -62,6 +63,24 @@ public partial class ProjectPickerDialog : DialogWindow
         else
         {
             projects = await _solutionService.GetProjectsAsync();
+        }
+
+        // Filter out the project containing the manifest being edited
+        if (!string.IsNullOrEmpty(_manifestFilePath))
+        {
+            var manifestDir = System.IO.Path.GetDirectoryName(_manifestFilePath);
+            var filteredProjects = new List<ProjectInfo>();
+
+            foreach (var project in projects)
+            {
+                var projectDir = System.IO.Path.GetDirectoryName(project.FullPath);
+                if (!string.Equals(projectDir, manifestDir, StringComparison.OrdinalIgnoreCase))
+                {
+                    filteredProjects.Add(project);
+                }
+            }
+
+            projects = filteredProjects;
         }
 
         ProjectListBox.ItemsSource = projects;

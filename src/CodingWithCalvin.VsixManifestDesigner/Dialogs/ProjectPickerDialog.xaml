@@ -11,9 +11,12 @@
                          WindowStartupLocation="CenterOwner"
                          ResizeMode="CanResize"
                          ShowInTaskbar="False"
+                         HasMaximizeButton="False"
+                         HasMinimizeButton="False"
                          Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
 
     <platformUi:DialogWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
         </Style>

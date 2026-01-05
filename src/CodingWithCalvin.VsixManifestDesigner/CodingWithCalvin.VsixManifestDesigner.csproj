@@ -26,9 +26,12 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.*" />
   </ItemGroup>
 
-  <!-- Include LICENSE in VSIX -->
+  <!-- Include resources in VSIX -->
   <ItemGroup>
-    <Content Include="..\..\LICENSE" Link="LICENSE">
+    <Content Include="..\..\LICENSE" Link="resources\LICENSE">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\resources\logo.png" Link="resources\logo.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>

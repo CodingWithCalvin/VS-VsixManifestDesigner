@@ -21,23 +21,19 @@ public partial class DependenciesView : UserControl
         InitializeComponent();
     }
 
-    private IServiceProvider? GetServiceProvider()
+    private IServiceProvider GetServiceProvider()
     {
-        return Package.GetGlobalService(typeof(SVsServiceProvider)) as IServiceProvider;
+        return ServiceProvider.GlobalProvider;
     }
 
     private void AddDependency_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
-            var dialog = new AddDependencyDialog(serviceProvider);
-            if (dialog.ShowDialog() == true)
+            var dialog = new AddDependencyDialog(GetServiceProvider(), vm.ManifestFilePath);
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 vm.Dependencies.Add(dialog.Dependency);
             }
@@ -46,18 +42,14 @@ public partial class DependenciesView : UserControl
 
     private void EditDependency_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
             if (DependenciesGrid.SelectedItem is Dependency selectedDependency)
             {
-                var dialog = new AddDependencyDialog(serviceProvider, selectedDependency);
-                if (dialog.ShowDialog() == true)
+                var dialog = new AddDependencyDialog(GetServiceProvider(), selectedDependency, vm.ManifestFilePath);
+                if (DialogHelper.ShowDialogWithOwner(dialog) == true)
                 {
                     var index = vm.Dependencies.IndexOf(selectedDependency);
                     if (index >= 0)

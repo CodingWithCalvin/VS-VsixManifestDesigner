@@ -11,6 +11,8 @@
                          WindowStartupLocation="CenterOwner"
                          ResizeMode="NoResize"
                          ShowInTaskbar="False"
+                         HasMaximizeButton="False"
+                         HasMinimizeButton="False"
                          Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
 
     <platformUi:DialogWindow.Resources>

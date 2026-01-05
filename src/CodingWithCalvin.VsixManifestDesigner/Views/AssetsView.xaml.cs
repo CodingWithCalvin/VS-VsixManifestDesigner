@@ -21,23 +21,19 @@ public partial class AssetsView : UserControl
         InitializeComponent();
     }
 
-    private IServiceProvider? GetServiceProvider()
+    private IServiceProvider GetServiceProvider()
     {
-        return Package.GetGlobalService(typeof(SVsServiceProvider)) as IServiceProvider;
+        return ServiceProvider.GlobalProvider;
     }
 
     private void AddAsset_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
-            var dialog = new AddAssetDialog(serviceProvider);
-            if (dialog.ShowDialog() == true)
+            var dialog = new AddAssetDialog(GetServiceProvider(), vm.ManifestFilePath);
+            if (DialogHelper.ShowDialogWithOwner(dialog) == true)
             {
                 vm.Assets.Add(dialog.Asset);
             }
@@ -46,19 +42,15 @@ public partial class AssetsView : UserControl
 
     private void EditAsset_Click(object sender, RoutedEventArgs e)
     {
+        ThreadHelper.ThrowIfNotOnUIThread();
+
         if (DataContext is ManifestViewModel vm)
         {
-            var serviceProvider = GetServiceProvider();
-            if (serviceProvider == null)
-            {
-                return;
-            }
-
             var dataGrid = FindName("AssetsGrid") as DataGrid;
             if (dataGrid?.SelectedItem is Asset selectedAsset)
             {
-                var dialog = new AddAssetDialog(serviceProvider, selectedAsset);
-                if (dialog.ShowDialog() == true)
+                var dialog = new AddAssetDialog(GetServiceProvider(), selectedAsset, vm.ManifestFilePath);
+                if (DialogHelper.ShowDialogWithOwner(dialog) == true)
                 {
                     var index = vm.Assets.IndexOf(selectedAsset);
                     if (index >= 0)

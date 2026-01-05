@@ -13,6 +13,7 @@ namespace CodingWithCalvin.VsixManifestDesigner.Dialogs;
 public partial class AddDependencyDialog : DialogWindow
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly string? _manifestFilePath;
     private ProjectInfo? _selectedProject;
 
     /// <summary>
@@ -24,7 +25,9 @@ public partial class AddDependencyDialog : DialogWindow
     /// Initializes a new instance of the <see cref="AddDependencyDialog"/> class for adding.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    public AddDependencyDialog(IServiceProvider serviceProvider) : this(serviceProvider, new Dependency())
+    /// <param name="manifestFilePath">The path to the manifest file being edited.</param>
+    public AddDependencyDialog(IServiceProvider serviceProvider, string? manifestFilePath = null)
+        : this(serviceProvider, new Dependency(), manifestFilePath)
     {
     }
 
@@ -33,9 +36,11 @@ public partial class AddDependencyDialog : DialogWindow
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
     /// <param name="dependency">The dependency to edit.</param>
-    public AddDependencyDialog(IServiceProvider serviceProvider, Dependency dependency)
+    /// <param name="manifestFilePath">The path to the manifest file being edited.</param>
+    public AddDependencyDialog(IServiceProvider serviceProvider, Dependency dependency, string? manifestFilePath = null)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _manifestFilePath = manifestFilePath;
 
         Dependency = new Dependency
         {
@@ -95,12 +100,14 @@ public partial class AddDependencyDialog : DialogWindow
 
     private void BrowseProject_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new ProjectPickerDialog(_serviceProvider)
+        Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+        var dialog = new ProjectPickerDialog(_serviceProvider, _manifestFilePath)
         {
             ShowOnlyVsixProjects = true
         };
 
-        if (dialog.ShowDialog() == true && dialog.SelectedProject != null)
+        if (DialogHelper.ShowDialogWithOwner(dialog) == true && dialog.SelectedProject != null)
         {
             _selectedProject = dialog.SelectedProject;
             ProjectTextBox.Text = _selectedProject.Name;
