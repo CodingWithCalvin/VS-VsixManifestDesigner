@@ -38,8 +38,6 @@ public partial class ProjectPickerDialog : DialogWindow
 
         InitializeComponent();
 
-        Resources.Add("BoolToVisibilityConverter", new BooleanToVisibilityConverter());
-
         Loaded += OnLoaded;
     }
 
