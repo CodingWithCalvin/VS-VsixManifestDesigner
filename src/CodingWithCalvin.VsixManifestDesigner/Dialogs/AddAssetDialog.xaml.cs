@@ -13,6 +13,7 @@ namespace CodingWithCalvin.VsixManifestDesigner.Dialogs;
 public partial class AddAssetDialog : DialogWindow
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly string? _manifestFilePath;
     private ProjectInfo? _selectedProject;
 
     /// <summary>
@@ -24,7 +25,9 @@ public partial class AddAssetDialog : DialogWindow
     /// Initializes a new instance of the <see cref="AddAssetDialog"/> class for adding.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    public AddAssetDialog(IServiceProvider serviceProvider) : this(serviceProvider, new Asset())
+    /// <param name="manifestFilePath">The path to the manifest file being edited.</param>
+    public AddAssetDialog(IServiceProvider serviceProvider, string? manifestFilePath = null)
+        : this(serviceProvider, new Asset(), manifestFilePath)
     {
     }
 
@@ -33,9 +36,11 @@ public partial class AddAssetDialog : DialogWindow
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
     /// <param name="asset">The asset to edit.</param>
-    public AddAssetDialog(IServiceProvider serviceProvider, Asset asset)
+    /// <param name="manifestFilePath">The path to the manifest file being edited.</param>
+    public AddAssetDialog(IServiceProvider serviceProvider, Asset asset, string? manifestFilePath = null)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _manifestFilePath = manifestFilePath;
 
         Asset = new Asset
         {
@@ -117,7 +122,7 @@ public partial class AddAssetDialog : DialogWindow
 
     private void BrowseProject_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new ProjectPickerDialog(_serviceProvider);
+        var dialog = new ProjectPickerDialog(_serviceProvider, _manifestFilePath);
         if (dialog.ShowDialog() == true && dialog.SelectedProject != null)
         {
             _selectedProject = dialog.SelectedProject;

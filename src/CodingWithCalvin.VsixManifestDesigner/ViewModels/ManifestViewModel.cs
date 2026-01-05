@@ -32,6 +32,11 @@ public sealed class ManifestViewModel : ViewModelBase
     }
 
     /// <summary>
+    /// Gets or sets the path to the manifest file being edited.
+    /// </summary>
+    public string? ManifestFilePath { get; set; }
+
+    /// <summary>
     /// Gets or sets the selected tab index.
     /// </summary>
     public int SelectedTabIndex

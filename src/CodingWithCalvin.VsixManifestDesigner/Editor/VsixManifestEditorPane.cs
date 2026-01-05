@@ -270,6 +270,7 @@ public sealed class VsixManifestEditorPane : WindowPane,
             UnadviseFileChange();
 
             var manifest = _manifestService.Load(filePath);
+            _viewModel.ManifestFilePath = filePath;
             _viewModel.LoadManifest(manifest);
             _isDirty = false;
 

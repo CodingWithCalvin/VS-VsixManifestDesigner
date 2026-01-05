@@ -30,7 +30,7 @@ public partial class AssetsView : UserControl
     {
         if (DataContext is ManifestViewModel vm)
         {
-            var dialog = new AddAssetDialog(GetServiceProvider());
+            var dialog = new AddAssetDialog(GetServiceProvider(), vm.ManifestFilePath);
             if (dialog.ShowDialog() == true)
             {
                 vm.Assets.Add(dialog.Asset);
@@ -45,7 +45,7 @@ public partial class AssetsView : UserControl
             var dataGrid = FindName("AssetsGrid") as DataGrid;
             if (dataGrid?.SelectedItem is Asset selectedAsset)
             {
-                var dialog = new AddAssetDialog(GetServiceProvider(), selectedAsset);
+                var dialog = new AddAssetDialog(GetServiceProvider(), selectedAsset, vm.ManifestFilePath);
                 if (dialog.ShowDialog() == true)
                 {
                     var index = vm.Assets.IndexOf(selectedAsset);
