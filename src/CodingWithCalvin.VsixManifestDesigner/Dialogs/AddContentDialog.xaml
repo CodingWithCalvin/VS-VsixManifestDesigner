@@ -1,0 +1,57 @@
+<platformUi:DialogWindow x:Class="CodingWithCalvin.VsixManifestDesigner.Dialogs.AddContentDialog"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                         xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+                         mc:Ignorable="d"
+                         Title="Add Content"
+                         Width="450" Height="200"
+                         WindowStartupLocation="CenterOwner"
+                         ResizeMode="NoResize"
+                         ShowInTaskbar="False"
+                         Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
+
+    <platformUi:DialogWindow.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        </Style>
+    </platformUi:DialogWindow.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Type:" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="0" Grid.Column="1" x:Name="TypeComboBox" Margin="0,0,0,10"
+                  SelectedItem="{Binding Type, Mode=TwoWay}" />
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Path:" VerticalAlignment="Center" />
+        <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" x:Name="PathTextBox" Text="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Column="1" Content="..." Width="30" Margin="5,0,0,0" Click="BrowsePath_Click" />
+        </Grid>
+
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="OK" Width="75" Margin="0,0,10,0" IsDefault="True" Click="OkButton_Click" />
+            <Button Content="Cancel" Width="75" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</platformUi:DialogWindow>
