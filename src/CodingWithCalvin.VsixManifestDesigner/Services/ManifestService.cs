@@ -10,7 +10,7 @@ namespace CodingWithCalvin.VsixManifestDesigner.Services;
 /// <summary>
 /// Service for loading and saving VSIX manifest files.
 /// </summary>
-public sealed class ManifestService
+public sealed class ManifestService : IManifestService
 {
     private static readonly XNamespace VsixNs = "http://schemas.microsoft.com/developer/vsx-schema/2011";
     private static readonly XNamespace DesignNs = "http://schemas.microsoft.com/developer/vsx-schema-design/2011";

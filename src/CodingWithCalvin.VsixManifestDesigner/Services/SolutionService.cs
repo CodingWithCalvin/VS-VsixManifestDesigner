@@ -14,17 +14,29 @@ namespace CodingWithCalvin.VsixManifestDesigner.Services;
 /// Service for querying solution projects using CPS-compatible APIs.
 /// Uses IVsSolution.GetProjectEnum instead of DTE extenders.
 /// </summary>
-public sealed class SolutionService
+public sealed class SolutionService : ISolutionService
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IMsBuildQueryService _msBuildQueryService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SolutionService"/> class.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
     public SolutionService(IServiceProvider serviceProvider)
+        : this(serviceProvider, new MsBuildQueryService())
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolutionService"/> class.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <param name="msBuildQueryService">The MSBuild query service.</param>
+    public SolutionService(IServiceProvider serviceProvider, IMsBuildQueryService msBuildQueryService)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _msBuildQueryService = msBuildQueryService ?? throw new ArgumentNullException(nameof(msBuildQueryService));
     }
 
     /// <summary>
@@ -110,13 +122,17 @@ public sealed class SolutionService
         // Check for VsixSdk usage
         var usesVsixSdk = await CheckUsesVsixSdkAsync(projectPath);
 
+        // Check for TemplateProjectOutputGroup target
+        var hasTemplateOutputGroup = await _msBuildQueryService.HasTargetAsync(projectPath, "TemplateProjectOutputGroup");
+
         return new ProjectInfo
         {
             Name = projectName,
             FullPath = projectPath,
             IsSdkStyle = isSdkStyle,
             UsesVsixSdk = usesVsixSdk,
-            IsVsixProject = isVsixProject
+            IsVsixProject = isVsixProject,
+            HasTemplateOutputGroup = hasTemplateOutputGroup
         };
     }
 
