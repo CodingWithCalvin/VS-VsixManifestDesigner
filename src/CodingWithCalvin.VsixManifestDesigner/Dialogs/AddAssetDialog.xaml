@@ -49,8 +49,9 @@
         <Label Grid.Row="1" Grid.Column="0" Content="Source:" VerticalAlignment="Center" />
         <ComboBox Grid.Row="1" Grid.Column="1" x:Name="SourceComboBox" Margin="0,0,0,10"
                   SelectionChanged="SourceComboBox_SelectionChanged">
-            <ComboBoxItem Content="Project" Tag="Project" />
-            <ComboBoxItem Content="File" Tag="File" />
+            <ComboBoxItem Content="This Project" Tag="CurrentProject" />
+            <ComboBoxItem Content="Project in Solution" Tag="Project" />
+            <ComboBoxItem Content="File on Disk" Tag="File" />
         </ComboBox>
 
         <!-- Project (shown when Source is Project) -->

@@ -29,4 +29,10 @@ public sealed class Dependency
     /// Gets or sets the location (URL or relative path).
     /// </summary>
     public string? Location { get; set; }
+
+    /// <summary>
+    /// Gets or sets the full path to the referenced project file.
+    /// Used for adding ProjectReference to the VSIX project when Source is "Project".
+    /// </summary>
+    public string? ProjectFullPath { get; set; }
 }

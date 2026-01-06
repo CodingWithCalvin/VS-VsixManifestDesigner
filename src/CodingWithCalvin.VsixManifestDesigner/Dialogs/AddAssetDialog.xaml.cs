@@ -48,6 +48,7 @@ public partial class AddAssetDialog : DialogWindow
             Source = asset.Source,
             Path = asset.Path,
             ProjectName = asset.ProjectName,
+            ProjectFullPath = asset.ProjectFullPath,
             TargetPath = asset.TargetPath,
             VsixSubPath = asset.VsixSubPath,
             Addressable = asset.Addressable
@@ -87,28 +88,46 @@ public partial class AddAssetDialog : DialogWindow
 
     private void SourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // Clear source-specific fields when source changes
+        _selectedProject = null;
+        if (ProjectTextBox != null)
+        {
+            ProjectTextBox.Text = string.Empty;
+        }
+        if (PathTextBox != null)
+        {
+            PathTextBox.Text = string.Empty;
+        }
+
         UpdateSourceVisibility();
         UpdateWarningVisibility();
     }
 
     private void UpdateSourceVisibility()
     {
-        var isProjectSource = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() == "Project";
+        var source = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+        var isProjectSource = source == "Project";
+        var isFileSource = source == "File";
 
+        // Show project picker only for Project source
         ProjectLabel.Visibility = isProjectSource ? Visibility.Visible : Visibility.Collapsed;
         ProjectGrid.Visibility = isProjectSource ? Visibility.Visible : Visibility.Collapsed;
-        PathLabel.Visibility = isProjectSource ? Visibility.Collapsed : Visibility.Visible;
-        PathGrid.Visibility = isProjectSource ? Visibility.Collapsed : Visibility.Visible;
+
+        // Show path picker only for File source
+        PathLabel.Visibility = isFileSource ? Visibility.Visible : Visibility.Collapsed;
+        PathGrid.Visibility = isFileSource ? Visibility.Visible : Visibility.Collapsed;
+
+        // CurrentProject source shows nothing additional
     }
 
     private void UpdateWarningVisibility()
     {
         var selectedType = TypeComboBox.SelectedItem as string;
         var isTemplateType = AssetTypes.IsTemplate(selectedType ?? string.Empty);
-        var isProjectSource = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() == "Project";
+        var source = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
 
         // Show warning if template asset type + project source + SDK-style project without VsixSdk
-        if (isTemplateType && isProjectSource && _selectedProject != null)
+        if (isTemplateType && source == "Project" && _selectedProject != null)
         {
             if (_selectedProject.IsSdkStyle && !_selectedProject.UsesVsixSdk)
             {
@@ -149,8 +168,10 @@ public partial class AddAssetDialog : DialogWindow
 
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        var source = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Project";
+        var source = (SourceComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "CurrentProject";
         var isProjectSource = source == "Project";
+        var isCurrentProjectSource = source == "CurrentProject";
+        var isFileSource = source == "File";
 
         if (isProjectSource && string.IsNullOrWhiteSpace(ProjectTextBox.Text))
         {
@@ -158,7 +179,7 @@ public partial class AddAssetDialog : DialogWindow
             return;
         }
 
-        if (!isProjectSource && string.IsNullOrWhiteSpace(PathTextBox.Text))
+        if (isFileSource && string.IsNullOrWhiteSpace(PathTextBox.Text))
         {
             MessageBox.Show("Please specify a file path.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
@@ -167,15 +188,38 @@ public partial class AddAssetDialog : DialogWindow
         Asset.Type = TypeComboBox.SelectedItem as string ?? AssetTypes.VsPackage;
         Asset.Source = source;
 
-        if (isProjectSource)
+        if (isCurrentProjectSource)
+        {
+            // CurrentProject uses %CurrentProject% token - no ProjectReference needed
+            Asset.Path = "%CurrentProject%";
+            Asset.ProjectName = null;
+            Asset.ProjectFullPath = null;
+            Asset.TargetPath = null;
+        }
+        else if (isProjectSource)
         {
             Asset.ProjectName = ProjectTextBox.Text;
-            Asset.Path = $"|{ProjectTextBox.Text}|";
+            Asset.ProjectFullPath = _selectedProject?.FullPath;
+
+            // Template assets use Path for the required folder and TargetPath for the project token
+            var requiredFolder = AssetTypes.GetRequiredFolder(Asset.Type);
+            if (!string.IsNullOrEmpty(requiredFolder))
+            {
+                Asset.Path = requiredFolder;
+                Asset.TargetPath = AssetTypes.GenerateProjectToken(ProjectTextBox.Text, Asset.Type);
+            }
+            else
+            {
+                Asset.Path = AssetTypes.GenerateProjectToken(ProjectTextBox.Text, Asset.Type);
+                Asset.TargetPath = null;
+            }
         }
         else
         {
             Asset.Path = PathTextBox.Text;
             Asset.ProjectName = null;
+            Asset.ProjectFullPath = null;
+            Asset.TargetPath = null;
         }
 
         Asset.VsixSubPath = string.IsNullOrWhiteSpace(VsixSubPathTextBox.Text) ? null : VsixSubPathTextBox.Text;

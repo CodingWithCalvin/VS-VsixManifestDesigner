@@ -48,7 +48,8 @@ public partial class AddDependencyDialog : DialogWindow
             DisplayName = dependency.DisplayName,
             Version = dependency.Version,
             Source = dependency.Source,
-            Location = dependency.Location
+            Location = dependency.Location,
+            ProjectFullPath = dependency.ProjectFullPath
         };
 
         InitializeComponent();
@@ -77,6 +78,21 @@ public partial class AddDependencyDialog : DialogWindow
 
     private void SourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // Clear source-specific fields when source changes
+        _selectedProject = null;
+        if (ProjectTextBox != null)
+        {
+            ProjectTextBox.Text = string.Empty;
+        }
+        if (LocationTextBox != null)
+        {
+            LocationTextBox.Text = string.Empty;
+        }
+        if (IdTextBox != null)
+        {
+            IdTextBox.Text = string.Empty;
+        }
+
         UpdateSourceVisibility();
     }
 
@@ -158,6 +174,7 @@ public partial class AddDependencyDialog : DialogWindow
         Dependency.Version = VersionTextBox.Text;
         Dependency.Source = source;
         Dependency.Location = source == "File" ? LocationTextBox.Text : null;
+        Dependency.ProjectFullPath = source == "Project" ? _selectedProject?.FullPath : null;
 
         DialogResult = true;
         Close();
