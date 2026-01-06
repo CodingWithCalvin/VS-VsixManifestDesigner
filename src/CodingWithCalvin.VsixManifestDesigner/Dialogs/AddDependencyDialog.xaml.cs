@@ -78,6 +78,21 @@ public partial class AddDependencyDialog : DialogWindow
 
     private void SourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        // Clear source-specific fields when source changes
+        _selectedProject = null;
+        if (ProjectTextBox != null)
+        {
+            ProjectTextBox.Text = string.Empty;
+        }
+        if (LocationTextBox != null)
+        {
+            LocationTextBox.Text = string.Empty;
+        }
+        if (IdTextBox != null)
+        {
+            IdTextBox.Text = string.Empty;
+        }
+
         UpdateSourceVisibility();
     }
 

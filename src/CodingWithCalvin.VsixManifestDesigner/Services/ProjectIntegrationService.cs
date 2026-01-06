@@ -13,23 +13,6 @@ namespace CodingWithCalvin.VsixManifestDesigner.Services;
 /// </summary>
 public sealed class ProjectIntegrationService : IProjectIntegrationService
 {
-    private static readonly XNamespace MSBuildNamespace = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-    /// <summary>
-    /// Default output groups for standard assets.
-    /// </summary>
-    private const string DefaultOutputGroups = "BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup";
-
-    /// <summary>
-    /// Default local-only output groups (debug symbols).
-    /// </summary>
-    private const string DefaultLocalOnlyOutputGroups = "DebugSymbolsProjectOutputGroup";
-
-    /// <summary>
-    /// Output groups for template assets.
-    /// </summary>
-    private const string TemplateOutputGroups = "TemplateProjectOutputGroup";
-
     /// <inheritdoc/>
     public Task<bool> AddProjectReferenceAsync(string vsixProjectPath, string referencedProjectPath, string? assetType = null)
     {
@@ -470,42 +453,30 @@ public sealed class ProjectIntegrationService : IProjectIntegrationService
             new XAttribute("Include", relativePath));
 
         // Determine output groups based on asset type
-        var outputGroups = GetOutputGroupsForAssetType(assetType);
-        if (!string.IsNullOrEmpty(outputGroups))
-        {
-            projectRef.Add(new XElement(ns + "IncludeOutputGroupsInVSIX", outputGroups));
-        }
+        var outputGroups = AssetTypes.GetOutputGroups(assetType);
+        projectRef.Add(new XElement(ns + "IncludeOutputGroupsInVSIX", outputGroups));
+        projectRef.Add(new XElement(ns + "IncludeOutputGroupsInVSIXLocalOnly", AssetTypes.DebugOutputGroups));
 
-        projectRef.Add(new XElement(ns + "IncludeOutputGroupsInVSIXLocalOnly", DefaultLocalOnlyOutputGroups));
+        // Template assets should not reference the output assembly
+        if (AssetTypes.ShouldDisableReferenceOutputAssembly(assetType))
+        {
+            projectRef.Add(new XElement(ns + "ReferenceOutputAssembly", "false"));
+        }
 
         return projectRef;
     }
 
     private static void UpdateProjectReferenceMetadata(XElement projectRef, XNamespace ns, string? assetType)
     {
-        var outputGroups = GetOutputGroupsForAssetType(assetType);
-        if (!string.IsNullOrEmpty(outputGroups))
+        var outputGroups = AssetTypes.GetOutputGroups(assetType);
+        SetOrAddChildElement(projectRef, ns, "IncludeOutputGroupsInVSIX", outputGroups);
+        SetOrAddChildElement(projectRef, ns, "IncludeOutputGroupsInVSIXLocalOnly", AssetTypes.DebugOutputGroups);
+
+        // Template assets should not reference the output assembly
+        if (AssetTypes.ShouldDisableReferenceOutputAssembly(assetType))
         {
-            SetOrAddChildElement(projectRef, ns, "IncludeOutputGroupsInVSIX", outputGroups);
+            SetOrAddChildElement(projectRef, ns, "ReferenceOutputAssembly", "false");
         }
-
-        SetOrAddChildElement(projectRef, ns, "IncludeOutputGroupsInVSIXLocalOnly", DefaultLocalOnlyOutputGroups);
-    }
-
-    private static string GetOutputGroupsForAssetType(string? assetType)
-    {
-        if (string.IsNullOrEmpty(assetType))
-        {
-            return DefaultOutputGroups;
-        }
-
-        // Template assets need TemplateProjectOutputGroup
-        if (AssetTypes.IsTemplate(assetType))
-        {
-            return TemplateOutputGroups;
-        }
-
-        return DefaultOutputGroups;
     }
 
     private static void SetOrAddChildElement(XElement parent, XNamespace ns, string elementName, string value)
