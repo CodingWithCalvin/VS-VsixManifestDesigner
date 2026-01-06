@@ -26,6 +26,12 @@ public sealed class Asset
     public string? ProjectName { get; set; }
 
     /// <summary>
+    /// Gets or sets the full path to the referenced project file.
+    /// Used for adding ProjectReference to the VSIX project.
+    /// </summary>
+    public string? ProjectFullPath { get; set; }
+
+    /// <summary>
     /// Gets or sets the target path (design-time attribute).
     /// </summary>
     public string? TargetPath { get; set; }

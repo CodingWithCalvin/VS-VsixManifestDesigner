@@ -48,7 +48,8 @@ public partial class AddDependencyDialog : DialogWindow
             DisplayName = dependency.DisplayName,
             Version = dependency.Version,
             Source = dependency.Source,
-            Location = dependency.Location
+            Location = dependency.Location,
+            ProjectFullPath = dependency.ProjectFullPath
         };
 
         InitializeComponent();
@@ -158,6 +159,7 @@ public partial class AddDependencyDialog : DialogWindow
         Dependency.Version = VersionTextBox.Text;
         Dependency.Source = source;
         Dependency.Location = source == "File" ? LocationTextBox.Text : null;
+        Dependency.ProjectFullPath = source == "Project" ? _selectedProject?.FullPath : null;
 
         DialogResult = true;
         Close();

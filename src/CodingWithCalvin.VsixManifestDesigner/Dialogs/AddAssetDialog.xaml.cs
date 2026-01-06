@@ -48,6 +48,7 @@ public partial class AddAssetDialog : DialogWindow
             Source = asset.Source,
             Path = asset.Path,
             ProjectName = asset.ProjectName,
+            ProjectFullPath = asset.ProjectFullPath,
             TargetPath = asset.TargetPath,
             VsixSubPath = asset.VsixSubPath,
             Addressable = asset.Addressable
@@ -171,11 +172,13 @@ public partial class AddAssetDialog : DialogWindow
         {
             Asset.ProjectName = ProjectTextBox.Text;
             Asset.Path = $"|{ProjectTextBox.Text}|";
+            Asset.ProjectFullPath = _selectedProject?.FullPath;
         }
         else
         {
             Asset.Path = PathTextBox.Text;
             Asset.ProjectName = null;
+            Asset.ProjectFullPath = null;
         }
 
         Asset.VsixSubPath = string.IsNullOrWhiteSpace(VsixSubPathTextBox.Text) ? null : VsixSubPathTextBox.Text;
