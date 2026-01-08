@@ -1,3 +1,8 @@
 <Solution>
+  <Configurations>
+    <Configuration Name="Debug" />
+    <Configuration Name="Release" />
+    <Platform Name="AnyCPU" />
+  </Configurations>
   <Project Path="CodingWithCalvin.VsixManifestDesigner\CodingWithCalvin.VsixManifestDesigner.csproj" />
 </Solution>
