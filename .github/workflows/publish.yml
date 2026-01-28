@@ -147,13 +147,14 @@ jobs:
           file_path: ./artifact/${{ env.INFO_FILE }}
 
       - name: 3. Create Tag & Release
-        uses: ncipollo/release-action@v1.14.0
-        with:
-          artifacts: ./artifact/${{ env.VSIX_FILE }}
-          body: ${{ needs.changelog.outputs.changelog }}
-          makeLatest: true
-          commit: ${{ steps.artifact_manifest.outputs.sha }}
-          tag: ${{ steps.artifact_manifest.outputs.version }}
+        run: |
+          gh release create "${{ steps.artifact_manifest.outputs.version }}" `
+            --title "${{ steps.artifact_manifest.outputs.version }}" `
+            --notes "${{ needs.changelog.outputs.changelog }}" `
+            --target "${{ steps.artifact_manifest.outputs.sha }}" `
+            "./artifact/${{ env.VSIX_FILE }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 4. Publish Release to Marketplace
         if: success()
