@@ -9,11 +9,14 @@ permissions:
 
 jobs:
   publish:
+    permissions:
+      contents: write
+      actions: read
     uses: CodingWithCalvin/.github/.github/workflows/vsix-publish.yml@main
     with:
       extension-name: VsixManifestDesigner
       display-name: 'VSIX Manifest Designer'
       marketplace-id: CodingWithCalvin.VS-VsixManifestDesigner
-      description: 'Visual Studio extension providing a visual designer for VSIX manifest files'
+      description: 'A Visual Studio extension providing a modern visual designer for VSIX manifest files!'
       hashtags: ''
     secrets: inherit
