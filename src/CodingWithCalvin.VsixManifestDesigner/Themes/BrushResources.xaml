@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+                    xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0">
+
+    <!--
+    VS Theme Color Mappings
+    These brushes provide theme-aware colors that work across Light, Dark, and Blue VS themes.
+    Uses VsBrushes which are dynamic resources that update with theme changes.
+    -->
+
+    <!-- Note: We primarily use DynamicResource with VsBrushes keys directly in the styles
+         rather than creating intermediate brushes, as VsBrushes already provides the
+         correct dynamic theming support. This file documents the key mappings. -->
+
+</ResourceDictionary>

@@ -1,0 +1,384 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+
+    <!--
+    Control Styles
+    Theme-aware styles for common WPF controls using VsBrushes.
+    -->
+
+    <!-- Focus Visual Style -->
+    <Style x:Key="VsFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2"
+                               StrokeThickness="1"
+                               Stroke="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}"
+                               StrokeDashArray="1 2"
+                               SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Label Style -->
+    <Style x:Key="VsLabelStyle" TargetType="Label">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Default Label Style -->
+    <Style TargetType="Label" BasedOn="{StaticResource VsLabelStyle}" />
+
+    <!-- TextBlock Style -->
+    <Style x:Key="VsTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+    </Style>
+
+    <!-- Default TextBlock Style -->
+    <Style TargetType="TextBlock" BasedOn="{StaticResource VsTextBlockStyle}" />
+
+    <!-- Section Header Style -->
+    <Style x:Key="SectionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource VsTextBlockStyle}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <!-- TextBox Style -->
+    <Style x:Key="VsTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="4,3" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.InactiveBorderKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.GrayTextKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#FF0000" />
+                            <Setter TargetName="border" Property="BorderThickness" Value="1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Default TextBox Style -->
+    <Style TargetType="TextBox" BasedOn="{StaticResource VsTextBoxStyle}" />
+
+    <!-- Button Style -->
+    <Style x:Key="VsButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarGradientBeginKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="MinWidth" Value="75" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource VsFocusVisualStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Focusable="False"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarHoverKey}}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarSelectedKey}}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.InactiveBorderKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.GrayTextKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Default Button Style -->
+    <Style TargetType="Button" BasedOn="{StaticResource VsButtonStyle}" />
+
+    <!-- ComboBox Toggle Button Template -->
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="Border"
+                    Grid.ColumnSpan="2"
+                    Background="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}"
+                    BorderBrush="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}"
+                    BorderThickness="1" />
+            <Border Grid.Column="0"
+                    Margin="1"
+                    Background="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}" />
+            <Path x:Name="Arrow"
+                  Grid.Column="1"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="M 0 0 L 4 4 L 8 0 Z"
+                  Fill="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.InactiveBorderKey}}" />
+                <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource {x:Static vs:VsBrushes.GrayTextKey}}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- ComboBox TextBox Template -->
+    <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+        <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+    </ControlTemplate>
+
+    <!-- ComboBox Style with full template -->
+    <Style x:Key="VsComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton"
+                                      Template="{StaticResource ComboBoxToggleButton}"
+                                      Focusable="False"
+                                      ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <ContentPresenter x:Name="ContentSite"
+                                          IsHitTestVisible="False"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          Margin="6,3,23,3"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left">
+                            <ContentPresenter.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                        <TextBox x:Name="PART_EditableTextBox"
+                                 Style="{x:Null}"
+                                 Template="{StaticResource ComboBoxTextBox}"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Margin="3,3,23,3"
+                                 Focusable="True"
+                                 Background="Transparent"
+                                 Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}"
+                                 CaretBrush="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}"
+                                 Visibility="Hidden"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}" />
+                        <Popup x:Name="Popup"
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Slide">
+                            <Grid x:Name="DropDown"
+                                  SnapsToDevicePixels="True"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder"
+                                        Background="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}"
+                                        BorderBrush="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}"
+                                        BorderThickness="1" />
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.GrayTextKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="True">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                        </Trigger>
+                        <Trigger Property="IsEditable" Value="True">
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Default ComboBox Style -->
+    <Style TargetType="ComboBox" BasedOn="{StaticResource VsComboBoxStyle}" />
+
+    <!-- ComboBoxItem Style -->
+    <Style x:Key="VsComboBoxItemStyle" TargetType="ComboBoxItem">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter>
+                            <ContentPresenter.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarHoverKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.GrayTextKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Default ComboBoxItem Style -->
+    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource VsComboBoxItemStyle}" />
+
+    <!-- CheckBox Style -->
+    <Style x:Key="VsCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource VsFocusVisualStyle}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.AccentMediumKey}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Default CheckBox Style -->
+    <Style TargetType="CheckBox" BasedOn="{StaticResource VsCheckBoxStyle}" />
+
+    <!-- ListBox Style -->
+    <Style x:Key="VsListBoxStyle" TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.WindowKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarMenuBorderKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- Default ListBox Style -->
+    <Style TargetType="ListBox" BasedOn="{StaticResource VsListBoxStyle}" />
+
+    <!-- ListBoxItem Style -->
+    <Style x:Key="VsListBoxItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarSelectedKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarTextSelectedKey}}" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="False" />
+                    <Condition Property="IsMouseOver" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.CommandBarHoverKey}}" />
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Default ListBoxItem Style -->
+    <Style TargetType="ListBoxItem" BasedOn="{StaticResource VsListBoxItemStyle}" />
+
+    <!-- ScrollViewer Style -->
+    <Style x:Key="VsScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="Background" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}" />
+    </Style>
+
+    <!-- Default ScrollViewer Style -->
+    <Style TargetType="ScrollViewer" BasedOn="{StaticResource VsScrollViewerStyle}" />
+
+</ResourceDictionary>

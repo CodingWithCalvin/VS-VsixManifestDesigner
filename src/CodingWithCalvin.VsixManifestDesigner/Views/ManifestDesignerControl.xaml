@@ -5,35 +5,202 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:CodingWithCalvin.VsixManifestDesigner.Views"
              xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
+             xmlns:converters="clr-namespace:CodingWithCalvin.VsixManifestDesigner.Converters"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
-             d:DesignHeight="600" d:DesignWidth="800"
+             d:DesignHeight="600" d:DesignWidth="900"
              Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
              Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:IndexToBoolConverter x:Key="IndexToBoolConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
-        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
-                    Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-                    Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
-            <TabItem Header="Metadata">
-                <views:MetadataView />
-            </TabItem>
-            <TabItem Header="Install Targets">
-                <views:InstallationView />
-            </TabItem>
-            <TabItem Header="Dependencies">
-                <views:DependenciesView />
-            </TabItem>
-            <TabItem Header="Prerequisites">
-                <views:PrerequisitesView />
-            </TabItem>
-            <TabItem Header="Assets">
-                <views:AssetsView />
-            </TabItem>
-            <TabItem Header="Content">
-                <views:ContentView />
-            </TabItem>
-        </TabControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Style="{StaticResource SidebarContainerStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Sidebar Header -->
+                <Border Grid.Row="0" Style="{StaticResource SidebarHeaderStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <imaging:CrispImage Width="20" Height="20"
+                                            Moniker="{x:Static catalog:KnownMonikers.ExtensionApplication}" />
+                        <TextBlock Style="{StaticResource SidebarHeaderTitleStyle}" Text="VSIX Manifest" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation Items -->
+                <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                    <!-- Metadata -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=0}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.Property}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Metadata" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Installation -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=1}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.Application}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Install Targets" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Dependencies -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=2}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Dependencies" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Prerequisites -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=3}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.Checkmark}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Prerequisites" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Assets -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=4}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.FolderClosed}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Assets" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Content -->
+                    <RadioButton Style="{StaticResource SidebarNavButtonStyle}"
+                                 GroupName="Navigation"
+                                 IsChecked="{Binding SelectedTabIndex, Converter={StaticResource IndexToBoolConverter}, ConverterParameter=5}">
+                        <StackPanel Orientation="Horizontal">
+                            <imaging:CrispImage Style="{StaticResource NavIconStyle}"
+                                                Moniker="{x:Static catalog:KnownMonikers.Script}" />
+                            <TextBlock Style="{StaticResource NavLabelStyle}" Text="Content" />
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Content Area -->
+        <Border Grid.Column="1" Style="{StaticResource ContentAreaStyle}">
+            <Grid>
+                <!-- Use visibility-based switching for views -->
+                <views:MetadataView>
+                    <views:MetadataView.Style>
+                        <Style TargetType="views:MetadataView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:MetadataView.Style>
+                </views:MetadataView>
+
+                <views:InstallationView>
+                    <views:InstallationView.Style>
+                        <Style TargetType="views:InstallationView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:InstallationView.Style>
+                </views:InstallationView>
+
+                <views:DependenciesView>
+                    <views:DependenciesView.Style>
+                        <Style TargetType="views:DependenciesView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:DependenciesView.Style>
+                </views:DependenciesView>
+
+                <views:PrerequisitesView>
+                    <views:PrerequisitesView.Style>
+                        <Style TargetType="views:PrerequisitesView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="3">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:PrerequisitesView.Style>
+                </views:PrerequisitesView>
+
+                <views:AssetsView>
+                    <views:AssetsView.Style>
+                        <Style TargetType="views:AssetsView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="4">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:AssetsView.Style>
+                </views:AssetsView>
+
+                <views:ContentView>
+                    <views:ContentView.Style>
+                        <Style TargetType="views:ContentView">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTabIndex}" Value="5">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:ContentView.Style>
+                </views:ContentView>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

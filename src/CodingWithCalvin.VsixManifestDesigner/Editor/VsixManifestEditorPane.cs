@@ -294,7 +294,8 @@ public sealed class VsixManifestEditorPane : WindowPane,
         // Only mark dirty for actual content changes, not UI state changes
         if (!_isLoading &&
             e.PropertyName != nameof(ManifestViewModel.Manifest) &&
-            e.PropertyName != nameof(ManifestViewModel.SelectedTabIndex))
+            e.PropertyName != nameof(ManifestViewModel.SelectedTabIndex) &&
+            e.PropertyName != nameof(ManifestViewModel.CurrentSectionDisplayName))
         {
             _isDirty = true;
         }

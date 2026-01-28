@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+    Theme Resources - Master Resource Dictionary
+    This file merges all theme resource dictionaries for the VSIX Manifest Designer.
+    Include this single file in views and dialogs to access all themed styles.
+    -->
+
+    <ResourceDictionary.MergedDictionaries>
+        <!-- VS Theme Color Brush Mappings -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/BrushResources.xaml" />
+
+        <!-- Control Styles (Button, TextBox, ComboBox, Label, CheckBox, ListBox) -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ControlStyles.xaml" />
+
+        <!-- DataGrid Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/DataGridStyles.xaml" />
+
+        <!-- TabControl Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/TabControlStyles.xaml" />
+
+        <!-- Validation Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ValidationStyles.xaml" />
+
+        <!-- Badge and Info/Warning Box Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/BadgeStyles.xaml" />
+
+        <!-- Sidebar Navigation Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/SidebarStyles.xaml" />
+
+        <!-- Card Container Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/CardStyles.xaml" />
+
+        <!-- Page Header and Navigation Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/NavigationStyles.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+    Standard Spacing Values
+    Use these for consistent margins and padding across the UI.
+
+    Control Margin (vertical): 0,4
+    Panel Margin (all sides): 12
+    Section Margin (bottom): 0,0,0,16
+    Button Spacing (right): 0,0,8,0
+    -->
+
+    <!-- Spacing Constants -->
+    <Thickness x:Key="ControlMargin">0,4</Thickness>
+    <Thickness x:Key="PanelMargin">12</Thickness>
+    <Thickness x:Key="SectionMargin">0,0,0,16</Thickness>
+    <Thickness x:Key="ButtonSpacing">0,0,8,0</Thickness>
+    <Thickness x:Key="FormFieldMargin">0,0,0,10</Thickness>
+    <Thickness x:Key="DialogPadding">15</Thickness>
+    <Thickness x:Key="ButtonPanelMargin">0,10,0,0</Thickness>
+
+    <!-- Additional Spacing Constants for Modern UI -->
+    <Thickness x:Key="CardMargin">0,0,0,16</Thickness>
+    <Thickness x:Key="CardPadding">20</Thickness>
+    <Thickness x:Key="PageHeaderMargin">0,0,0,24</Thickness>
+    <Thickness x:Key="ContentAreaPadding">24</Thickness>
+    <Thickness x:Key="CardHeaderMargin">0,0,0,16</Thickness>
+    <sys:Double x:Key="SidebarWidth" xmlns:sys="clr-namespace:System;assembly=mscorlib">220</sys:Double>
+
+</ResourceDictionary>

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using CodingWithCalvin.VsixManifestDesigner.Models;
+using CodingWithCalvin.VsixManifestDesigner.Services;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.Win32;
 
@@ -15,6 +17,8 @@ public partial class AddDependencyDialog : DialogWindow
     private readonly IServiceProvider _serviceProvider;
     private readonly string? _manifestFilePath;
     private ProjectInfo? _selectedProject;
+    private IReadOnlyList<SetupPackageInfo>? _installedPackages;
+    private bool _packagesLoaded;
 
     /// <summary>
     /// Gets the dependency being edited.
@@ -105,6 +109,15 @@ public partial class AddDependencyDialog : DialogWindow
         ProjectLabel.Visibility = isProjectSource ? Visibility.Visible : Visibility.Collapsed;
         ProjectGrid.Visibility = isProjectSource ? Visibility.Visible : Visibility.Collapsed;
 
+        // Show installed extension picker for Installed source
+        var isInstalledSource = source == "Installed";
+        InstalledLabel.Visibility = isInstalledSource ? Visibility.Visible : Visibility.Collapsed;
+        InstalledComboBox.Visibility = isInstalledSource ? Visibility.Visible : Visibility.Collapsed;
+        if (isInstalledSource)
+        {
+            _ = LoadInstalledPackagesAsync();
+        }
+
         // Show location for File source
         var isFileSource = source == "File";
         LocationLabel.Visibility = isFileSource ? Visibility.Visible : Visibility.Collapsed;
@@ -112,6 +125,64 @@ public partial class AddDependencyDialog : DialogWindow
 
         // Enable/disable ID field based on source
         IdTextBox.IsEnabled = !isProjectSource;
+    }
+
+    private async System.Threading.Tasks.Task LoadInstalledPackagesAsync()
+    {
+        if (_packagesLoaded)
+        {
+            return;
+        }
+
+        _packagesLoaded = true;
+
+        try
+        {
+            var service = new SetupPackageService(_serviceProvider);
+            _installedPackages = await service.GetInstalledPackagesAsync();
+
+            // Clear existing items except the first "(Custom)" item
+            while (InstalledComboBox.Items.Count > 1)
+            {
+                InstalledComboBox.Items.RemoveAt(1);
+            }
+
+            // Add loaded packages
+            foreach (var package in _installedPackages)
+            {
+                InstalledComboBox.Items.Add(new ComboBoxItem
+                {
+                    Content = package.Title,
+                    Tag = package.Id
+                });
+            }
+
+            if (InstalledComboBox.SelectedIndex < 0)
+            {
+                InstalledComboBox.SelectedIndex = 0;
+            }
+        }
+        catch
+        {
+            // Keep fallback static items if loading fails
+            if (InstalledComboBox.SelectedIndex < 0)
+            {
+                InstalledComboBox.SelectedIndex = 0;
+            }
+        }
+    }
+
+    private void InstalledComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (InstalledComboBox.SelectedItem is ComboBoxItem item)
+        {
+            var extensionId = item.Tag as string;
+            if (!string.IsNullOrEmpty(extensionId) && IdTextBox != null)
+            {
+                IdTextBox.Text = extensionId;
+                DisplayNameTextBox.Text = item.Content?.ToString() ?? string.Empty;
+            }
+        }
     }
 
     private void BrowseProject_Click(object sender, RoutedEventArgs e)

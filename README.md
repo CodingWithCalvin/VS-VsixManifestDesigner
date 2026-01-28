@@ -54,7 +54,23 @@ For the best VSIX development experience, pair this extension with [CodingWithCa
 
 ## 🖼️ Screenshots
 
-*Coming soon!*
+### Metadata
+![Metadata Editor](resources/metadata.png)
+
+### Installation Targets
+![Installation Targets](resources/install-targets.png)
+
+### Dependencies
+![Dependencies](resources/dependencies.png)
+
+### Prerequisites
+![Prerequisites](resources/prerequisites.png)
+
+### Assets
+![Assets](resources/assets.png)
+
+### Content
+![Content](resources/content.png)
 
 ## 🛠️ Installation
 

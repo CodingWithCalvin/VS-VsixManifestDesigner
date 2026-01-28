@@ -20,6 +20,10 @@ namespace CodingWithCalvin.VsixManifestDesigner;
 [ProvideEditorFactory(typeof(VsixManifestEditorFactory), 110, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
 [ProvideEditorExtension(typeof(VsixManifestEditorFactory), ".vsixmanifest", 100)]
 [ProvideEditorLogicalView(typeof(VsixManifestEditorFactory), VSConstants.LOGVIEWID.Designer_string)]
+[ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string, PackageAutoLoadFlags.BackgroundLoad)]
+[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
+[ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
+[ProvideAutoLoad(VSConstants.UICONTEXT.EmptySolution_string, PackageAutoLoadFlags.BackgroundLoad)]
 public sealed class VsixManifestDesignerPackage : AsyncPackage
 {
     /// <summary>
