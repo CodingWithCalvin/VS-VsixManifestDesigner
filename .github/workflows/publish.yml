@@ -7,16 +7,175 @@ permissions:
   contents: write
   actions: read
 
+env:
+  EXTENSION_NAME: VsixManifestDesigner
+  DISPLAY_NAME: 'VSIX Manifest Designer'
+  MARKETPLACE_ID: CodingWithCalvin.VS-VsixManifestDesigner
+  DESCRIPTION: 'A Visual Studio extension providing a modern visual designer for VSIX manifest files!'
+  INFO_FILE: CodingWithCalvin.VsixManifestDesigner.info
+  VSIX_FILE: CodingWithCalvin.VsixManifestDesigner.vsix
+  MARKETPLACE_URL: https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-VsixManifestDesigner
+
 jobs:
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{ steps.changelog.outputs.CHANGELOG }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags 2>/dev/null || echo "")
+          echo "Previous tag: ${PREVIOUS_TAG:-'(none - first release)'}"
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            COMMIT_RANGE="HEAD"
+          else
+            COMMIT_RANGE="${PREVIOUS_TAG}..HEAD"
+          fi
+
+          declare -a FEATURES
+          declare -a BUGS
+          declare -a MAINTENANCE
+          declare -A PROCESSED_PRS
+
+          COMMIT_SHAS=$(git log ${COMMIT_RANGE} --pretty=format:"%H" --no-merges)
+
+          for SHA in $COMMIT_SHAS; do
+            PR_DATA=$(gh pr list --search "$SHA" --state merged --json number,title,body --limit 1 2>/dev/null || echo "[]")
+            if [ "$PR_DATA" = "[]" ] || [ -z "$PR_DATA" ]; then
+              continue
+            fi
+
+            PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number // empty')
+            PR_TITLE=$(echo "$PR_DATA" | jq -r '.[0].title // empty')
+            PR_BODY=$(echo "$PR_DATA" | jq -r '.[0].body // empty')
+
+            if [ -z "$PR_NUMBER" ] || [ -z "$PR_TITLE" ]; then
+              continue
+            fi
+
+            if [ -n "${PROCESSED_PRS[$PR_NUMBER]}" ]; then
+              continue
+            fi
+            PROCESSED_PRS[$PR_NUMBER]=1
+
+            if echo "$PR_TITLE" | grep -qE "^revert(\(|:)"; then
+              continue
+            fi
+
+            ISSUE_NUMS=$(echo "$PR_BODY" | grep -oiE "(fixes|closes|resolves)\s*#[0-9]+" | grep -oE "[0-9]+" | sort -n | uniq || echo "")
+            if [ -n "$ISSUE_NUMS" ]; then
+              ISSUE_LIST=$(echo "$ISSUE_NUMS" | sed 's/^/#/' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')
+              ENTRY="- $PR_TITLE (${ISSUE_LIST})"
+            else
+              ENTRY="- $PR_TITLE"
+            fi
+
+            if echo "$PR_TITLE" | grep -qE "^feat(\(|:)"; then
+              FEATURES+=("$ENTRY")
+            elif echo "$PR_TITLE" | grep -qE "^fix(\(|:)"; then
+              BUGS+=("$ENTRY")
+            else
+              MAINTENANCE+=("$ENTRY")
+            fi
+          done
+
+          CHANGELOG=""
+          if [ ${#FEATURES[@]} -gt 0 ]; then
+            CHANGELOG="### 🎉 New Features"$'\n\n'
+            for entry in "${FEATURES[@]}"; do
+              CHANGELOG="${CHANGELOG}${entry}"$'\n'
+            done
+            CHANGELOG="${CHANGELOG}"$'\n'
+          fi
+
+          if [ ${#BUGS[@]} -gt 0 ]; then
+            CHANGELOG="${CHANGELOG}### 🐛 Bug Fixes"$'\n\n'
+            for entry in "${BUGS[@]}"; do
+              CHANGELOG="${CHANGELOG}${entry}"$'\n'
+            done
+            CHANGELOG="${CHANGELOG}"$'\n'
+          fi
+
+          if [ ${#MAINTENANCE[@]} -gt 0 ]; then
+            CHANGELOG="${CHANGELOG}### 🔧 Maintenance"$'\n\n'
+            for entry in "${MAINTENANCE[@]}"; do
+              CHANGELOG="${CHANGELOG}${entry}"$'\n'
+            done
+            CHANGELOG="${CHANGELOG}"$'\n'
+          fi
+
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="Initial release! 🎉"
+          fi
+
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish:
+    needs: changelog
+    runs-on: windows-latest
     permissions:
       contents: write
-      actions: read
-    uses: CodingWithCalvin/.github/.github/workflows/vsix-publish.yml@main
+    outputs:
+      version: ${{ steps.artifact_manifest.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 1. Download artifact
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: build.yml
+          workflow_conclusion: success
+
+      - name: 2. Parse Artifact Manifest
+        id: artifact_manifest
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: ./artifact/${{ env.INFO_FILE }}
+
+      - name: 3. Create Tag & Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          artifacts: ./artifact/${{ env.VSIX_FILE }}
+          body: ${{ needs.changelog.outputs.changelog }}
+          makeLatest: true
+          commit: ${{ steps.artifact_manifest.outputs.sha }}
+          tag: ${{ steps.artifact_manifest.outputs.version }}
+
+      - name: 4. Publish Release to Marketplace
+        if: success()
+        uses: CodingWithCalvin/GHA-VSMarketplacePublisher@v1
+        with:
+          marketplace-pat: ${{ secrets.VS_PAT }}
+          publish-manifest-path: ./resources/extension.manifest.json
+          vsix-path: ./artifact/${{ env.VSIX_FILE }}
+
+  notify-bluesky:
+    needs: publish
+    uses: CodingWithCalvin/.github/.github/workflows/bluesky-post.yml@main
     with:
-      extension-name: VsixManifestDesigner
-      display-name: 'VSIX Manifest Designer'
-      marketplace-id: CodingWithCalvin.VS-VsixManifestDesigner
-      description: 'A Visual Studio extension providing a modern visual designer for VSIX manifest files!'
-      hashtags: ''
-    secrets: inherit
+      post_text: |
+        🚀 VSIX Manifest Designer v${{ needs.publish.outputs.version }} for #VisualStudio has been released!
+
+        [Check out the release notes here!](https://github.com/${{ github.repository }}/releases/tag/${{ needs.publish.outputs.version }})
+
+        #dotnet #vsix
+      embed_title: VSIX Manifest Designer for Visual Studio
+      embed_description: A Visual Studio extension providing a modern visual designer for VSIX manifest files!
+    secrets:
+      BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
+      BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+
