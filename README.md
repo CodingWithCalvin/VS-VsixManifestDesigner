@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="resources/logo.png" alt="VSIX Manifest Designer Logo" width="128" height="128">
+  <img src="https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/logo.png" alt="VSIX Manifest Designer Logo" width="128" height="128">
 </p>
 
 <h1 align="center">VSIX Manifest Designer</h1>
@@ -55,22 +55,22 @@ For the best VSIX development experience, pair this extension with [CodingWithCa
 ## 🖼️ Screenshots
 
 ### Metadata
-![Metadata Editor](resources/metadata.png)
+![Metadata Editor](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/metadata.png)
 
 ### Installation Targets
-![Installation Targets](resources/install-targets.png)
+![Installation Targets](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/install-targets.png)
 
 ### Dependencies
-![Dependencies](resources/dependencies.png)
+![Dependencies](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/dependencies.png)
 
 ### Prerequisites
-![Prerequisites](resources/prerequisites.png)
+![Prerequisites](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/prerequisites.png)
 
 ### Assets
-![Assets](resources/assets.png)
+![Assets](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/assets.png)
 
 ### Content
-![Content](resources/content.png)
+![Content](https://raw.githubusercontent.com/CodingWithCalvin/VS-VsixManifestDesigner/main/resources/content.png)
 
 ## 🛠️ Installation
 
