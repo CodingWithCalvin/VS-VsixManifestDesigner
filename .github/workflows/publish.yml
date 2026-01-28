@@ -9,6 +9,9 @@ permissions:
 
 jobs:
   publish:
+    permissions:
+      contents: write
+      actions: read
     uses: CodingWithCalvin/.github/.github/workflows/vsix-publish.yml@main
     with:
       extension-name: VsixManifestDesigner
