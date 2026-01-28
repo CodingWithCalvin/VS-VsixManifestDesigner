@@ -12,10 +12,16 @@
              Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
              Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
-        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
-                    Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-                    Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
             <TabItem Header="Metadata">
                 <views:MetadataView />
             </TabItem>

@@ -1,38 +1,37 @@
 <platformUi:DialogWindow x:Class="CodingWithCalvin.VsixManifestDesigner.Dialogs.ProjectPickerDialog"
-                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-                         xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-                         mc:Ignorable="d"
-                         Title="Select Project"
-                         Width="500" Height="400"
-                         WindowStartupLocation="CenterOwner"
-                         ResizeMode="CanResize"
-                         ShowInTaskbar="False"
-                         HasMaximizeButton="False"
-                         HasMinimizeButton="False"
-                         Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                        xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+                        mc:Ignorable="d"
+                        Title="Select Project"
+                        Width="500" Height="400"
+                        WindowStartupLocation="CenterOwner"
+                        ResizeMode="CanResize"
+                        ShowInTaskbar="False"
+                        HasMaximizeButton="False"
+                        HasMinimizeButton="False"
+                        Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
 
     <platformUi:DialogWindow.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
-        </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </ResourceDictionary>
     </platformUi:DialogWindow.Resources>
 
-    <Grid Margin="15">
+    <Grid Margin="{StaticResource DialogPadding}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Select a project from the solution:" Margin="0,0,0,10" />
+        <TextBlock Grid.Row="0" Text="Select a project from the solution:" Margin="{StaticResource FormFieldMargin}" />
 
         <ListBox Grid.Row="1" x:Name="ProjectListBox"
                  SelectionMode="Single"
@@ -41,13 +40,13 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                        <Border Background="#0078D4" CornerRadius="3" Padding="4,2" Margin="8,0,0,0"
+                        <Border Style="{StaticResource SdkBadgeStyle}"
                                 Visibility="{Binding IsSdkStyle, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Text="SDK" FontSize="10" Foreground="White" />
+                            <TextBlock Style="{StaticResource SdkBadgeTextStyle}" />
                         </Border>
-                        <Border Background="#107C10" CornerRadius="3" Padding="4,2" Margin="4,0,0,0"
+                        <Border Style="{StaticResource VsixSdkBadgeStyle}"
                                 Visibility="{Binding UsesVsixSdk, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Text="VsixSdk" FontSize="10" Foreground="White" />
+                            <TextBlock Style="{StaticResource VsixSdkBadgeTextStyle}" />
                         </Border>
                     </StackPanel>
                 </DataTemplate>
@@ -55,8 +54,8 @@
         </ListBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="OK" Width="75" Margin="0,0,10,0" IsDefault="True" Click="OkButton_Click" />
-            <Button Content="Cancel" Width="75" IsCancel="True" />
+            <Button Content="OK" Margin="{StaticResource ButtonSpacing}" IsDefault="True" Click="OkButton_Click" />
+            <Button Content="Cancel" IsCancel="True" />
         </StackPanel>
     </Grid>
 </platformUi:DialogWindow>

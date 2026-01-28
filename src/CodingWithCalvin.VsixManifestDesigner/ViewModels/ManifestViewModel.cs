@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CodingWithCalvin.VsixManifestDesigner.Models;
 using CodingWithCalvin.VsixManifestDesigner.Services;
 
@@ -59,6 +61,7 @@ public sealed class ManifestViewModel : ViewModelBase
             {
                 Manifest.Metadata.Identity.Id = value;
                 OnPropertyChanged();
+                ValidateId();
             }
         }
     }
@@ -75,6 +78,7 @@ public sealed class ManifestViewModel : ViewModelBase
             {
                 Manifest.Metadata.Identity.Version = value;
                 OnPropertyChanged();
+                ValidateVersion();
             }
         }
     }
@@ -91,6 +95,7 @@ public sealed class ManifestViewModel : ViewModelBase
             {
                 Manifest.Metadata.Identity.Publisher = value;
                 OnPropertyChanged();
+                ValidatePublisher();
             }
         }
     }
@@ -107,6 +112,7 @@ public sealed class ManifestViewModel : ViewModelBase
             {
                 Manifest.Metadata.DisplayName = value;
                 OnPropertyChanged();
+                ValidateDisplayName();
             }
         }
     }
@@ -123,6 +129,7 @@ public sealed class ManifestViewModel : ViewModelBase
             {
                 Manifest.Metadata.Description = value;
                 OnPropertyChanged();
+                ValidateDescription();
             }
         }
     }
@@ -291,12 +298,98 @@ public sealed class ManifestViewModel : ViewModelBase
 
     #endregion
 
+    #region Validation Methods
+
+    /// <summary>
+    /// Validates the ID field.
+    /// </summary>
+    private void ValidateId()
+    {
+        ClearErrors(nameof(Id));
+        foreach (var error in ValidateRequired(Id, "ID"))
+        {
+            AddError(error, nameof(Id));
+        }
+    }
+
+    /// <summary>
+    /// Validates the Version field.
+    /// </summary>
+    private void ValidateVersion()
+    {
+        ClearErrors(nameof(Version));
+        foreach (var error in ViewModelBase.ValidateVersion(Version, "Version"))
+        {
+            AddError(error, nameof(Version));
+        }
+    }
+
+    /// <summary>
+    /// Validates the Publisher field.
+    /// </summary>
+    private void ValidatePublisher()
+    {
+        ClearErrors(nameof(Publisher));
+        foreach (var error in ValidateRequired(Publisher, "Publisher"))
+        {
+            AddError(error, nameof(Publisher));
+        }
+    }
+
+    /// <summary>
+    /// Validates the DisplayName field.
+    /// </summary>
+    private void ValidateDisplayName()
+    {
+        ClearErrors(nameof(DisplayName));
+        foreach (var error in ValidateRequired(DisplayName, "Display Name"))
+        {
+            AddError(error, nameof(DisplayName));
+        }
+    }
+
+    /// <summary>
+    /// Validates the Description field.
+    /// </summary>
+    private void ValidateDescription()
+    {
+        ClearErrors(nameof(Description));
+        foreach (var error in ValidateRequired(Description, "Description"))
+        {
+            AddError(error, nameof(Description));
+        }
+    }
+
+    /// <summary>
+    /// Validates all required fields.
+    /// </summary>
+    public void ValidateAll()
+    {
+        ValidateId();
+        ValidateVersion();
+        ValidatePublisher();
+        ValidateDisplayName();
+        ValidateDescription();
+    }
+
+    /// <summary>
+    /// Gets all validation errors as a list of strings.
+    /// </summary>
+    /// <returns>A list of all error messages.</returns>
+    public IReadOnlyList<string> GetAllErrors()
+    {
+        return GetErrors(null).Cast<string>().ToList();
+    }
+
+    #endregion
+
     /// <summary>
     /// Loads a manifest into the ViewModel.
     /// </summary>
     /// <param name="manifest">The manifest to load.</param>
     public void LoadManifest(VsixManifest manifest)
     {
+        ClearAllErrors();
         Manifest = manifest;
 
         // Notify all properties changed
@@ -318,5 +411,8 @@ public sealed class ManifestViewModel : ViewModelBase
         OnPropertyChanged(nameof(Prerequisites));
         OnPropertyChanged(nameof(Assets));
         OnPropertyChanged(nameof(Contents));
+
+        // Run initial validation
+        ValidateAll();
     }
 }

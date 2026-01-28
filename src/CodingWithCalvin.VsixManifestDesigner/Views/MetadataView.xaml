@@ -12,17 +12,15 @@
              Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
 
     <UserControl.Resources>
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
-        </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/ThemeResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10"
-                  Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}">
-        <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+        <Grid Margin="{StaticResource PanelMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
@@ -44,71 +42,95 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- ID -->
-            <Label Grid.Row="0" Grid.Column="0" Content="ID:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <!-- ID (Required) -->
+            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="ID:" VerticalAlignment="Center" />
+            <TextBox Grid.Row="0" Grid.Column="1"
+                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource ValidatingTextBoxStyle}"
+                     Margin="{StaticResource FormFieldMargin}"
+                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Version -->
-            <Label Grid.Row="1" Grid.Column="0" Content="Version:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Version, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <!-- Version (Required) -->
+            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Version:" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="1"
+                     Text="{Binding Version, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource ValidatingTextBoxStyle}"
+                     Margin="{StaticResource FormFieldMargin}"
+                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Publisher -->
-            <Label Grid.Row="2" Grid.Column="0" Content="Publisher:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Publisher, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <!-- Publisher (Required) -->
+            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Publisher:" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     Text="{Binding Publisher, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource ValidatingTextBoxStyle}"
+                     Margin="{StaticResource FormFieldMargin}"
+                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Display Name -->
-            <Label Grid.Row="3" Grid.Column="0" Content="Display Name:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <!-- Display Name (Required) -->
+            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Display Name:" VerticalAlignment="Center" />
+            <TextBox Grid.Row="3" Grid.Column="1"
+                     Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource ValidatingTextBoxStyle}"
+                     Margin="{StaticResource FormFieldMargin}"
+                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Description -->
-            <Label Grid.Row="4" Grid.Column="0" Content="Description:" VerticalAlignment="Top" Margin="0,5,0,0" />
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
-                     VerticalScrollBarVisibility="Auto" />
+            <!-- Description (Required) -->
+            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Description:" VerticalAlignment="Top" Margin="0,4,0,0" />
+            <TextBox Grid.Row="4" Grid.Column="1"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                     Style="{StaticResource ValidatingTextBoxStyle}"
+                     Margin="{StaticResource FormFieldMargin}"
+                     Height="80" TextWrapping="Wrap" AcceptsReturn="True"
+                     VerticalScrollBarVisibility="Auto"
+                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
             <!-- Language -->
             <Label Grid.Row="5" Grid.Column="0" Content="Language:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="5" Grid.Column="1"
+                     Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- More Info URL -->
             <Label Grid.Row="6" Grid.Column="0" Content="More Info URL:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding MoreInfo, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="6" Grid.Column="1"
+                     Text="{Binding MoreInfo, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- License -->
             <Label Grid.Row="7" Grid.Column="0" Content="License:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding License, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="7" Grid.Column="1"
+                     Text="{Binding License, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- Icon -->
             <Label Grid.Row="8" Grid.Column="0" Content="Icon:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Icon, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="8" Grid.Column="1"
+                     Text="{Binding Icon, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- Preview Image -->
             <Label Grid.Row="9" Grid.Column="0" Content="Preview Image:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding PreviewImage, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="9" Grid.Column="1"
+                     Text="{Binding PreviewImage, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- Tags -->
             <Label Grid.Row="10" Grid.Column="0" Content="Tags:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="10" Grid.Column="1"
+                     Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- Getting Started Guide -->
             <Label Grid.Row="11" Grid.Column="0" Content="Getting Started:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding GettingStartedGuide, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="11" Grid.Column="1"
+                     Text="{Binding GettingStartedGuide, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
 
             <!-- Release Notes -->
             <Label Grid.Row="12" Grid.Column="0" Content="Release Notes:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding ReleaseNotes, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,5" />
+            <TextBox Grid.Row="12" Grid.Column="1"
+                     Text="{Binding ReleaseNotes, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="{StaticResource FormFieldMargin}" />
         </Grid>
     </ScrollViewer>
 </UserControl>
