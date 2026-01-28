@@ -5,11 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
-             d:DesignHeight="500" d:DesignWidth="700"
-             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-             Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+             d:DesignHeight="700" d:DesignWidth="700">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,118 +19,219 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-        <Grid Margin="{StaticResource PanelMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
+            <!-- Page Header -->
+            <StackPanel Style="{StaticResource PageHeaderContainerStyle}">
+                <StackPanel Style="{StaticResource PageHeaderRowStyle}">
+                    <imaging:CrispImage Style="{StaticResource PageHeaderIconStyle}"
+                                        Moniker="{x:Static catalog:KnownMonikers.Property}" />
+                    <TextBlock Style="{StaticResource PageHeaderTitleStyle}" Text="Metadata" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource PageHeaderDescriptionStyle}"
+                           Text="Configure the identity and descriptive information for your extension." />
+            </StackPanel>
 
-            <!-- ID (Required) -->
-            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="ID:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="0" Grid.Column="1"
-                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     Style="{StaticResource ValidatingTextBoxStyle}"
-                     Margin="{StaticResource FormFieldMargin}"
-                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
+            <!-- Identity Card -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <!-- Card Header -->
+                    <StackPanel Style="{StaticResource CardHeaderStyle}">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.IdBadge}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Identity" />
+                    </StackPanel>
 
-            <!-- Version (Required) -->
-            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Version:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     Text="{Binding Version, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     Style="{StaticResource ValidatingTextBoxStyle}"
-                     Margin="{StaticResource FormFieldMargin}"
-                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
+                    <!-- Card Content -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-            <!-- Publisher (Required) -->
-            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Publisher:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="2" Grid.Column="1"
-                     Text="{Binding Publisher, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     Style="{StaticResource ValidatingTextBoxStyle}"
-                     Margin="{StaticResource FormFieldMargin}"
-                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
+                        <!-- ID (Required) -->
+                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="ID:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                                 Style="{StaticResource ValidatingTextBoxStyle}"
+                                 Margin="{StaticResource FormFieldMargin}"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Display Name (Required) -->
-            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Display Name:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="3" Grid.Column="1"
-                     Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     Style="{StaticResource ValidatingTextBoxStyle}"
-                     Margin="{StaticResource FormFieldMargin}"
-                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
+                        <!-- Version (Required) -->
+                        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Version:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                                 Text="{Binding Version, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                                 Style="{StaticResource ValidatingTextBoxStyle}"
+                                 Margin="{StaticResource FormFieldMargin}"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Description (Required) -->
-            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Description:" VerticalAlignment="Top" Margin="0,4,0,0" />
-            <TextBox Grid.Row="4" Grid.Column="1"
-                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
-                     Style="{StaticResource ValidatingTextBoxStyle}"
-                     Margin="{StaticResource FormFieldMargin}"
-                     Height="80" TextWrapping="Wrap" AcceptsReturn="True"
-                     VerticalScrollBarVisibility="Auto"
-                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
+                        <!-- Publisher (Required) -->
+                        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Publisher:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding Publisher, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                                 Style="{StaticResource ValidatingTextBoxStyle}"
+                                 Margin="{StaticResource FormFieldMargin}"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- Language -->
-            <Label Grid.Row="5" Grid.Column="0" Content="Language:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="5" Grid.Column="1"
-                     Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                        <!-- Display Name (Required) -->
+                        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Display Name:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="3" Grid.Column="1"
+                                 Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                                 Style="{StaticResource ValidatingTextBoxStyle}"
+                                 Margin="{StaticResource FormFieldMargin}"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- More Info URL -->
-            <Label Grid.Row="6" Grid.Column="0" Content="More Info URL:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="6" Grid.Column="1"
-                     Text="{Binding MoreInfo, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                        <!-- Description (Required) -->
+                        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource RequiredFieldLabelStyle}" Content="Description:" VerticalAlignment="Top" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="4" Grid.Column="1"
+                                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
+                                 Style="{StaticResource ValidatingTextBoxStyle}"
+                                 Margin="{StaticResource FormFieldMargin}"
+                                 Height="80" TextWrapping="Wrap" AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 VerticalContentAlignment="Top"
+                                 HorizontalContentAlignment="Left"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}" />
 
-            <!-- License -->
-            <Label Grid.Row="7" Grid.Column="0" Content="License:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="7" Grid.Column="1"
-                     Text="{Binding License, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                        <!-- Language -->
+                        <Label Grid.Row="5" Grid.Column="0" Content="Language:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="5" Grid.Column="1"
+                                 Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="{StaticResource FormFieldMargin}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-            <!-- Icon -->
-            <Label Grid.Row="8" Grid.Column="0" Content="Icon:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="8" Grid.Column="1"
-                     Text="{Binding Icon, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+            <!-- Branding Card -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <!-- Card Header -->
+                    <StackPanel Style="{StaticResource CardHeaderStyle}">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.Image}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Branding" />
+                    </StackPanel>
 
-            <!-- Preview Image -->
-            <Label Grid.Row="9" Grid.Column="0" Content="Preview Image:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="9" Grid.Column="1"
-                     Text="{Binding PreviewImage, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                    <!-- Card Content -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-            <!-- Tags -->
-            <Label Grid.Row="10" Grid.Column="0" Content="Tags:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="10" Grid.Column="1"
-                     Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                        <!-- Icon -->
+                        <Label Grid.Row="0" Grid.Column="0" Content="Icon:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <Grid Grid.Row="0" Grid.Column="1" Margin="{StaticResource FormFieldMargin}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding Icon, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="..." Width="30" Margin="4,0,0,0" Click="BrowseIcon_Click" ToolTip="Browse for icon file" />
+                        </Grid>
 
-            <!-- Getting Started Guide -->
-            <Label Grid.Row="11" Grid.Column="0" Content="Getting Started:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="11" Grid.Column="1"
-                     Text="{Binding GettingStartedGuide, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
+                        <!-- Preview Image -->
+                        <Label Grid.Row="1" Grid.Column="0" Content="Preview Image:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <Grid Grid.Row="1" Grid.Column="1" Margin="{StaticResource FormFieldMargin}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding PreviewImage, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="..." Width="30" Margin="4,0,0,0" Click="BrowsePreviewImage_Click" ToolTip="Browse for preview image file" />
+                        </Grid>
 
-            <!-- Release Notes -->
-            <Label Grid.Row="12" Grid.Column="0" Content="Release Notes:" VerticalAlignment="Center" />
-            <TextBox Grid.Row="12" Grid.Column="1"
-                     Text="{Binding ReleaseNotes, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="{StaticResource FormFieldMargin}" />
-        </Grid>
+                        <!-- Tags -->
+                        <Label Grid.Row="2" Grid.Column="0" Content="Tags:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding Tags, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="{StaticResource FormFieldMargin}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Documentation Card -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <!-- Card Header -->
+                    <StackPanel Style="{StaticResource CardHeaderStyle}">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.Document}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Documentation" />
+                    </StackPanel>
+
+                    <!-- Card Content -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- More Info URL -->
+                        <Label Grid.Row="0" Grid.Column="0" Content="More Info URL:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 Text="{Binding MoreInfo, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="{StaticResource FormFieldMargin}" />
+
+                        <!-- License -->
+                        <Label Grid.Row="1" Grid.Column="0" Content="License:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <Grid Grid.Row="1" Grid.Column="1" Margin="{StaticResource FormFieldMargin}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding License, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="..." Width="30" Margin="4,0,0,0" Click="BrowseLicense_Click" ToolTip="Browse for license file" />
+                        </Grid>
+
+                        <!-- Getting Started Guide -->
+                        <Label Grid.Row="2" Grid.Column="0" Content="Getting Started:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <Grid Grid.Row="2" Grid.Column="1" Margin="{StaticResource FormFieldMargin}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding GettingStartedGuide, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="..." Width="30" Margin="4,0,0,0" Click="BrowseGettingStarted_Click" ToolTip="Browse for getting started guide file" />
+                        </Grid>
+
+                        <!-- Release Notes -->
+                        <Label Grid.Row="3" Grid.Column="0" Content="Release Notes:" VerticalAlignment="Center" Margin="{StaticResource FormFieldMargin}" />
+                        <Grid Grid.Row="3" Grid.Column="1" Margin="{StaticResource FormFieldMargin}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding ReleaseNotes, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="..." Width="30" Margin="4,0,0,0" Click="BrowseReleaseNotes_Click" ToolTip="Browse for release notes file" />
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>

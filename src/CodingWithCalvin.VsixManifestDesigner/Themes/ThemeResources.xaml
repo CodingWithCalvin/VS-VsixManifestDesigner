@@ -25,6 +25,15 @@
 
         <!-- Badge and Info/Warning Box Styles -->
         <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/BadgeStyles.xaml" />
+
+        <!-- Sidebar Navigation Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/SidebarStyles.xaml" />
+
+        <!-- Card Container Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/CardStyles.xaml" />
+
+        <!-- Page Header and Navigation Styles -->
+        <ResourceDictionary Source="/CodingWithCalvin.VsixManifestDesigner;component/Themes/NavigationStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--
@@ -45,5 +54,13 @@
     <Thickness x:Key="FormFieldMargin">0,0,0,10</Thickness>
     <Thickness x:Key="DialogPadding">15</Thickness>
     <Thickness x:Key="ButtonPanelMargin">0,10,0,0</Thickness>
+
+    <!-- Additional Spacing Constants for Modern UI -->
+    <Thickness x:Key="CardMargin">0,0,0,16</Thickness>
+    <Thickness x:Key="CardPadding">20</Thickness>
+    <Thickness x:Key="PageHeaderMargin">0,0,0,24</Thickness>
+    <Thickness x:Key="ContentAreaPadding">24</Thickness>
+    <Thickness x:Key="CardHeaderMargin">0,0,0,16</Thickness>
+    <sys:Double x:Key="SidebarWidth" xmlns:sys="clr-namespace:System;assembly=mscorlib">220</sys:Double>
 
 </ResourceDictionary>

@@ -5,11 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
-             d:DesignHeight="400" d:DesignWidth="600"
-             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-             Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+             d:DesignHeight="500" d:DesignWidth="700">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,30 +19,63 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="{StaticResource PanelMargin}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Installation Targets" Style="{StaticResource SectionHeaderStyle}" />
-
-        <DataGrid Grid.Row="1"
-                  ItemsSource="{Binding InstallationTargets}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="True"
-                  CanUserDeleteRows="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="150" />
-                <DataGridTextColumn Header="Architecture" Binding="{Binding ProductArchitecture}" Width="100" />
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="{StaticResource ButtonPanelMargin}">
-            <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddTarget_Click" />
-            <Button Content="Remove" Click="RemoveTarget_Click" />
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderContainerStyle}">
+            <StackPanel Style="{StaticResource PageHeaderRowStyle}">
+                <imaging:CrispImage Style="{StaticResource PageHeaderIconStyle}"
+                                    Moniker="{x:Static catalog:KnownMonikers.Application}" />
+                <TextBlock Style="{StaticResource PageHeaderTitleStyle}" Text="Install Targets" />
+            </StackPanel>
+            <TextBlock Style="{StaticResource PageHeaderDescriptionStyle}"
+                       Text="Specify which Visual Studio editions and versions your extension supports." />
         </StackPanel>
+
+        <!-- Installation Targets Card -->
+        <Border Grid.Row="1" Style="{StaticResource CardWithGridStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Card Header -->
+                <Border Grid.Row="0" Style="{StaticResource CardInnerHeaderStyle}">
+                    <StackPanel Style="{StaticResource CardHeaderStyle}" Margin="0">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.Application}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Installation Targets" />
+                    </StackPanel>
+                </Border>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding InstallationTargets}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
+                          BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="150" />
+                        <DataGridTextColumn Header="Architecture" Binding="{Binding ProductArchitecture}" Width="100" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Card Footer with Buttons -->
+                <Border Grid.Row="2" Style="{StaticResource CardFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddTarget_Click" />
+                        <Button Content="Remove" Click="RemoveTarget_Click" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

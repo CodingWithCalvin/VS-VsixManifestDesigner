@@ -16,12 +16,26 @@ public sealed class ManifestViewModel : ViewModelBase
     private int _selectedTabIndex;
 
     /// <summary>
+    /// Section display names for the navigation sidebar.
+    /// </summary>
+    private static readonly string[] SectionNames =
+    {
+        "Metadata",
+        "Install Targets",
+        "Dependencies",
+        "Prerequisites",
+        "Assets",
+        "Content"
+    };
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ManifestViewModel"/> class.
     /// </summary>
     /// <param name="manifestService">The manifest service.</param>
     public ManifestViewModel(ManifestService manifestService)
     {
         _manifestService = manifestService;
+        NavigateCommand = new RelayCommand(NavigateToSection);
     }
 
     /// <summary>
@@ -44,7 +58,42 @@ public sealed class ManifestViewModel : ViewModelBase
     public int SelectedTabIndex
     {
         get => _selectedTabIndex;
-        set => SetProperty(ref _selectedTabIndex, value);
+        set
+        {
+            if (SetProperty(ref _selectedTabIndex, value))
+            {
+                OnPropertyChanged(nameof(CurrentSectionDisplayName));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the command to navigate to a specific section.
+    /// </summary>
+    public RelayCommand NavigateCommand { get; }
+
+    /// <summary>
+    /// Gets the display name for the currently selected section.
+    /// </summary>
+    public string CurrentSectionDisplayName =>
+        _selectedTabIndex >= 0 && _selectedTabIndex < SectionNames.Length
+            ? SectionNames[_selectedTabIndex]
+            : string.Empty;
+
+    /// <summary>
+    /// Navigates to the specified section by index.
+    /// </summary>
+    /// <param name="parameter">The section index as a string or int.</param>
+    private void NavigateToSection(object? parameter)
+    {
+        if (parameter is int index)
+        {
+            SelectedTabIndex = index;
+        }
+        else if (parameter is string indexString && int.TryParse(indexString, out int parsedIndex))
+        {
+            SelectedTabIndex = parsedIndex;
+        }
     }
 
     #region Metadata Properties

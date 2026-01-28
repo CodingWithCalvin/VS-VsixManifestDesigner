@@ -5,11 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
-             d:DesignHeight="400" d:DesignWidth="600"
-             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-             Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+             d:DesignHeight="500" d:DesignWidth="700">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,35 +19,68 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="{StaticResource PanelMargin}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Dependencies" Style="{StaticResource SectionHeaderStyle}" />
-
-        <DataGrid Grid.Row="1"
-                  x:Name="DependenciesGrid"
-                  ItemsSource="{Binding Dependencies}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="True"
-                  IsReadOnly="True"
-                  SelectionMode="Single">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="Display Name" Binding="{Binding DisplayName}" Width="150" />
-                <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="100" />
-                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="80" />
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="{StaticResource ButtonPanelMargin}">
-            <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddDependency_Click" />
-            <Button Content="Edit" Margin="{StaticResource ButtonSpacing}" Click="EditDependency_Click" />
-            <Button Content="Remove" Click="RemoveDependency_Click" />
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderContainerStyle}">
+            <StackPanel Style="{StaticResource PageHeaderRowStyle}">
+                <imaging:CrispImage Style="{StaticResource PageHeaderIconStyle}"
+                                    Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                <TextBlock Style="{StaticResource PageHeaderTitleStyle}" Text="Dependencies" />
+            </StackPanel>
+            <TextBlock Style="{StaticResource PageHeaderDescriptionStyle}"
+                       Text="Define other extensions that your extension depends on." />
         </StackPanel>
+
+        <!-- Dependencies Card -->
+        <Border Grid.Row="1" Style="{StaticResource CardWithGridStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Card Header -->
+                <Border Grid.Row="0" Style="{StaticResource CardInnerHeaderStyle}">
+                    <StackPanel Style="{StaticResource CardHeaderStyle}" Margin="0">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.Reference}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Dependencies" />
+                    </StackPanel>
+                </Border>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="1"
+                          x:Name="DependenciesGrid"
+                          ItemsSource="{Binding Dependencies}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="True"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="Display Name" Binding="{Binding DisplayName}" Width="150" />
+                        <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="100" />
+                        <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="80" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Card Footer with Buttons -->
+                <Border Grid.Row="2" Style="{StaticResource CardFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddDependency_Click" />
+                        <Button Content="Edit" Margin="{StaticResource ButtonSpacing}" Click="EditDependency_Click" />
+                        <Button Content="Remove" Click="RemoveDependency_Click" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

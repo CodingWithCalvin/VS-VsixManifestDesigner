@@ -5,11 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CodingWithCalvin.VsixManifestDesigner.ViewModels"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ManifestViewModel}"
-             d:DesignHeight="400" d:DesignWidth="600"
-             Background="{DynamicResource {x:Static vs:VsBrushes.ToolWindowBackgroundKey}}"
-             Foreground="{DynamicResource {x:Static vs:VsBrushes.ToolWindowTextKey}}">
+             d:DesignHeight="500" d:DesignWidth="700">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,37 +19,66 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="{StaticResource PanelMargin}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Content" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,5" />
-
-        <TextBlock Grid.Row="1" TextWrapping="Wrap" Margin="{StaticResource FormFieldMargin}"
-                   Text="Define paths to project templates and item templates that should be included in this extension." />
-
-        <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding Contents}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="True"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  x:Name="ContentsGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150" />
-                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="{StaticResource ButtonPanelMargin}">
-            <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddContent_Click" />
-            <Button Content="Edit" Margin="{StaticResource ButtonSpacing}" Click="EditContent_Click" />
-            <Button Content="Remove" Click="RemoveContent_Click" />
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderContainerStyle}">
+            <StackPanel Style="{StaticResource PageHeaderRowStyle}">
+                <imaging:CrispImage Style="{StaticResource PageHeaderIconStyle}"
+                                    Moniker="{x:Static catalog:KnownMonikers.Script}" />
+                <TextBlock Style="{StaticResource PageHeaderTitleStyle}" Text="Content" />
+            </StackPanel>
+            <TextBlock Style="{StaticResource PageHeaderDescriptionStyle}"
+                       Text="Define paths to project templates and item templates that should be included in this extension." />
         </StackPanel>
+
+        <!-- Content Card -->
+        <Border Grid.Row="1" Style="{StaticResource CardWithGridStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Card Header -->
+                <Border Grid.Row="0" Style="{StaticResource CardInnerHeaderStyle}">
+                    <StackPanel Style="{StaticResource CardHeaderStyle}" Margin="0">
+                        <imaging:CrispImage Style="{StaticResource CardHeaderIconStyle}"
+                                            Moniker="{x:Static catalog:KnownMonikers.DocumentCollection}" />
+                        <TextBlock Style="{StaticResource CardHeaderTitleStyle}" Text="Template Content" />
+                    </StackPanel>
+                </Border>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="1"
+                          x:Name="ContentsGrid"
+                          ItemsSource="{Binding Contents}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="True"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150" />
+                        <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Card Footer with Buttons -->
+                <Border Grid.Row="2" Style="{StaticResource CardFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="Add" Margin="{StaticResource ButtonSpacing}" Click="AddContent_Click" />
+                        <Button Content="Edit" Margin="{StaticResource ButtonSpacing}" Click="EditContent_Click" />
+                        <Button Content="Remove" Click="RemoveContent_Click" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
