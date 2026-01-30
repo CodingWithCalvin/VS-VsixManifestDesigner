@@ -115,6 +115,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![CalvinAllen](https://avatars.githubusercontent.com/u/41448698?v=4&s=64)](https://github.com/CalvinAllen) 
 <!-- readme: contributors -end -->
 
+---
+
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/CalvinAllen">Coding With Calvin</a>
+  Made with ❤️ by <a href="https://github.com/CodingWithCalvin">Coding With Calvin</a>
 </p>
