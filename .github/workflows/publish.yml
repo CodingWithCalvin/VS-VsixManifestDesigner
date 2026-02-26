@@ -39,18 +39,3 @@ jobs:
           publish-manifest-path: ./resources/extension.manifest.json
           vsix-path: ./artifact/${{ env.VSIX_FILE }}
 
-  notify-bluesky:
-    needs: publish
-    uses: CodingWithCalvin/.github/.github/workflows/bluesky-post.yml@main
-    with:
-      post_text: |
-        🚀 VSIX Manifest Designer v${{ needs.publish.outputs.version }} for #VisualStudio has been released!
-
-        [Check it out on the VS Marketplace!](https://marketplace.visualstudio.com/items?itemName=CodingWithCalvin.VS-VsixManifestDesigner)
-
-        #dotnet #vsix
-      embed_title: VSIX Manifest Designer for Visual Studio
-      embed_description: A Visual Studio extension providing a modern visual designer for VSIX manifest files!
-    secrets:
-      BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
-      BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
