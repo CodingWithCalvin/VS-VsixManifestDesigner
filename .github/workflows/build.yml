@@ -6,11 +6,13 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - 'src/**'
-      - '*.slnx'
       - '.github/workflows/build.yml'
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - '.github/workflows/build.yml'
 
 jobs:
   build:
